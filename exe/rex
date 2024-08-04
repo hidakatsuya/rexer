@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require "rexer"
+
+begin
+  Rexer::Cli.start(ARGV)
+rescue => e
+  puts "ERROR (#{e.class}): #{e.message}"
+  puts e.backtrace if ENV["VERBOSE"]
+  exit 1
+end

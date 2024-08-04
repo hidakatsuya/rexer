@@ -1,34 +1,156 @@
-# Redminep
+# Rexer: Redmine Extension manager
 
-TODO: Delete this and the text below, and describe your gem
+Rexer is a tool for managing Redmine Extension, which means Redmine [Plugin](https://www.redmine.org/projects/redmine/wiki/Plugins) and [Theme](https://www.redmine.org/projects/redmine/wiki/Themes) in this tool.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/redminep`. To experiment with that code, run `bin/console` for an interactive prompt.
+It is mainly aimed at helping with the development of Redmine and its plugins, allowing you to define extensions in a Ruby DSL and install, uninstall, update, and switch between different sets of the extensions.
+
+[![Build](https://github.com/hidakatsuya/rexer/actions/workflows/build.yml/badge.svg)](https://github.com/hidakatsuya/rexer/actions/workflows/build.yml)
+[![Gem Version](https://badge.fury.io/rb/rexer.svg)](https://badge.fury.io/rb/rexer)
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+    bundle add rexer
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+    gem install rexer
 
 ## Usage
 
-TODO: Write usage instructions here
+### Quick Start
 
-## Development
+First, create a `.extensions.rb` file in the root directory of the Redmine application.
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test-unit` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```ruby
+theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair", branch: "support-propshaft" }
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+plugin :view_customize, github: { repo: "onozaty/redmine-view-customize", tag: "v3.5.2" }
+plugin :redmine_issues_panel, git: { url: "https://github.com/redmica/redmine_issues_panel", tag: "v1.0.2" }
+```
+
+Then, run the following command in the root directory of the Redmine application.
+
+```
+rex install
+```
+
+This command installs plugins and themes defined in the `.extensions.rb` file and generates the `.extensions.lock` file.
+
+> [!NOTE]
+> The `.extensions.lock` file is a file that locks the state of the installed extensions, but it's NOT a file that locks the version of the extensions.
+
+If you want to uninstall the extensions, run the following command.
+
+```
+rex uninstall
+```
+
+This command uninstalls the extensions and deletes the `.extensions.lock` file.
+
+### Commands
+
+```
+$ rex
+Commands:
+  rex help [COMMAND]  # Describe available commands or one specific command
+  rex install [ENV]   # Install extensions for the specified environment
+  rex state           # Show the current state of the installed extensions
+  rex switch [ENV]    # Uninstall extensions for the currently installed environment and install extensions for the specified environment
+  rex uninstall       # Uninstall extensions for the currently installed environment
+  rex update          # Update extensions for the currently installed environment to the latest version
+  rex version         # Show Rexer version
+```
+
+### Defining environments and extensions for the environment
+
+```ruby
+theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair" }
+plugin :redmine_issues_panel, git: { url: "https://github.com/redmica/redmine_issues_panel" }
+
+env :stable do
+  theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair", branch: "support-propshaft" }
+  plugin :redmine_issues_panel, git: { url: "https://github.com/redmica/redmine_issues_panel", tag: "v1.0.2" }
+end
+```
+
+In above example, the `bleuclair` theme and the `redmine_issues_panel` plugin are defined for the `default` environment. The `bleuclair` theme and the `redmine_issues_panel` plugin are defined for the `stable` environment.
+
+If you want to install extensions for the `default` environment, run the following command.
+
+```
+rex install
+or
+rex install default
+```
+
+Similarly, if you want to install extensions for the `stable` environment, run the following command.
+
+```
+rex install stable
+```
+
+In addition, you can switch between environments.
+
+```
+rex switch stable
+or
+rex install stable
+```
+
+The above command uninstalls the extensions for the currently installed environment and installs the extensions for the `stable` environment.
+
+### Defining hooks
+
+You can define hooks for each extension.
+
+```ruby
+plugin :redmica_s3, github: { repo: "redmica/redmica_s3" } do
+  installed do
+    Pathname.new("config", "s3.yml").write <<~YAML
+      access_key_id: ...
+    YAML
+  end
+
+  uninstalled do
+    Pathname.new("config", "s3.yml").delete
+  end
+
+  updated do
+    puts "updated"
+  end
+end
+```
+
+## Developing
+
+### Running integration tests
+
+First, you need to build the docker image for the integration tests.
+
+```
+rake rexer:test:build_integration_test_image
+```
+
+Then, you can run the integration tests.
+
+```
+rake test
+```
+
+### Formatting and Linting code
+
+This project uses [Standard](https://github.com/standardrb/standard) for code formatting and linting. You can format and check the code by running the following commands.
+
+```
+rake standard
+rake standard:fix
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/redminep.
+Bug reports and pull requests are welcome on GitHub at https://github.com/hidakatsuya/rexer.
 
 ## License
 

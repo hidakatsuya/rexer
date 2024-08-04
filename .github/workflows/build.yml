@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+      - "dev/**"
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Lint
+        run: bundle exec rake standard
+
+      - name: Set up test
+        run: bundle exec rake rexer:test:build_integration_test_image
+
+      - name: Run tests
+        run: bundle exec rake test
