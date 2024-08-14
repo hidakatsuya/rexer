@@ -33,7 +33,7 @@ class IntegrationTest < Test::Unit::TestCase
     docker_exec("rex install").then do |result|
       assert_true result.success?
       assert_equal [
-        "Rexer: 0.1.0",
+        "Rexer: #{Rexer::VERSION}",
         "Env: default",
         "",
         "Themes:",
@@ -84,7 +84,7 @@ class IntegrationTest < Test::Unit::TestCase
     docker_exec("rex install env1").then do |result|
       assert_true result.success?
       assert_equal [
-        "Rexer: 0.1.0",
+        "Rexer: #{Rexer::VERSION}",
         "Env: env1",
         "",
         "Plugins:",
@@ -95,7 +95,7 @@ class IntegrationTest < Test::Unit::TestCase
     docker_exec("rex switch env2").then do |result|
       assert_true result.success?
       assert_equal [
-        "Rexer: 0.1.0",
+        "Rexer: #{Rexer::VERSION}",
         "Env: env2",
         "",
         "Themes:",
