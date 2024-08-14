@@ -1,2 +1,2 @@
-class Hello < ApplicationRecord
+class Hello < (defined?(ApplicationRecord) ? ApplicationRecord : ActiveRecord::Base)
 end

@@ -12,6 +12,10 @@ It is mainly aimed at helping with the development of Redmine and its plugins, a
 gem install rexer
 ```
 
+## Supported Redmine
+
+Rexer is tested with Redmine v5.1 and trunk.
+
 ## Usage
 
 ### Quick Start
@@ -120,18 +124,24 @@ end
 
 ## Developing
 
-### Running integration tests
+### Running tests
 
 First, you need to build the docker image for the integration tests.
 
 ```
-rake rexer:test:build_integration_test_image
+rake test:prepare_integration
 ```
 
-Then, you can run the integration tests.
+Then, you can run all tests.
 
 ```
 rake test
+```
+
+Or, you can only the integration tests as follows.
+
+```
+rake test:integration
 ```
 
 ### Formatting and Linting code

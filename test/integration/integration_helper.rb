@@ -3,6 +3,8 @@ require "open3"
 require "rake"
 
 ENV["VERBOSE"] = "1"
+ENV["RUBY_VERSION"] ||= "3.3"
+ENV["REDMINE_BRANCH_NAME"] ||= "master"
 
 module IntegrationHelper
   Result = Data.define(:output_raw, :error_raw, :status_raw) do
@@ -15,7 +17,9 @@ module IntegrationHelper
     def success? = status_raw.success?
   end
 
-  def image_name = "rexer-test"
+  def image_name
+    @image_name ||= "rexer-test:#{ENV["RUBY_VERSION"]}-#{ENV["REDMINE_BRANCH_NAME"]}"
+  end
 
   def container_name = "rexer-test-container"
 
@@ -61,5 +65,14 @@ module IntegrationHelper
 
   def docker_stop
     run_with_capture("docker container stop -t 0 #{container_name} && docker container rm #{container_name}", raise: true)
+  end
+
+  def legacy_theme_dir?
+    return @legacy_theme_dir if defined?(@legacy_theme_dir)
+    @legacy_theme_dir = docker_exec("test -d /redmine/public/themes").success?
+  end
+
+  def theme_dir
+    legacy_theme_dir? ? "/redmine/public/themes" : "/redmine/themes"
   end
 end

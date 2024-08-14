@@ -2,6 +2,8 @@ ARG RUBY_VERSION=3.3
 
 FROM ruby:$RUBY_VERSION
 
+ARG REDMINE_BRANCH_NAME=master
+
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
@@ -52,7 +54,7 @@ RUN git init && \
 # Redmine
 #
 WORKDIR /redmine
-RUN git clone --depth 1 https://github.com/redmine/redmine.git .
+RUN git clone -b $REDMINE_BRANCH_NAME --depth 1 https://github.com/redmine/redmine.git .
 COPY test/integration/docker/database.yml config/database.yml
 
 # Directory for the bundle cache
