@@ -11,7 +11,7 @@ class IntegrationTest < Test::Unit::TestCase
     docker_stop
   end
 
-  test "rex version, install, uninstall and state" do
+  test "rex version, install, uninstall, state and envs" do
     result = docker_exec("rex version")
     assert_equal Rexer::VERSION, result.output_str
 
@@ -23,6 +23,11 @@ class IntegrationTest < Test::Unit::TestCase
     docker_exec("rex uninstall").then do |result|
       assert_true result.success?
       assert_equal "No lock file found", result.output_str
+    end
+
+    docker_exec("rex envs").then do |result|
+      assert_true result.success?
+      assert_equal %w[default env1 env2 env3], result.output
     end
 
     docker_exec("rex install").then do |result|
