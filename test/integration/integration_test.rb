@@ -43,8 +43,8 @@ class IntegrationTest < Test::Unit::TestCase
       assert_equal "plugin_a", result.output.last
     end
 
-    docker_exec("ls themes").then do |result|
-      assert_equal "theme_a", result.output.last
+    docker_exec("ls #{theme_dir}").then do |result|
+      assert_includes result.output.last, "theme_a"
     end
 
     docker_exec("bin/rails r 'puts Hello.table_name'").then do |result|
@@ -60,8 +60,9 @@ class IntegrationTest < Test::Unit::TestCase
       assert_equal ["README"], result.output
     end
 
-    docker_exec("ls themes").then do |result|
-      assert_equal ["README"], result.output
+    docker_exec("ls #{theme_dir}").then do |result|
+      expected_files = legacy_theme_dir? ? %w[README alternate classic] : %w[README]
+      assert_equal expected_files, result.output
     end
 
     docker_exec("rex state").then do |result|
@@ -120,7 +121,7 @@ class IntegrationTest < Test::Unit::TestCase
       assert_equal "update", result.output_str
     end
 
-    docker_exec("cat /redmine/themes/theme_a/README").then do |result|
+    docker_exec("cat #{theme_dir}/theme_a/README").then do |result|
       assert_equal "update", result.output_str
     end
 
