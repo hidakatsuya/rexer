@@ -8,13 +8,9 @@ It is mainly aimed at helping with the development of Redmine and its plugins, a
 
 ## Installation
 
-Install the gem and add to the application's Gemfile by executing:
-
-    bundle add rexer
-
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-    gem install rexer
+```
+gem install rexer
+```
 
 ## Usage
 
