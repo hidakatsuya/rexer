@@ -55,7 +55,7 @@ This command uninstalls the extensions and deletes the `.extensions.lock` file.
 $ rex
 Commands:
   rex help [COMMAND]  # Describe available commands or one specific command
-  dev envs            # Show the list of defined environments in .extensions.rb
+  rex envs            # Show the list of defined environments in .extensions.rb
   rex install [ENV]   # Install extensions for the specified environment
   rex state           # Show the current state of the installed extensions
   rex switch [ENV]    # Uninstall extensions for the currently installed environment and install extensions for the specified environment
