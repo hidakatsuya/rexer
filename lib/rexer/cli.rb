@@ -31,6 +31,11 @@ module Rexer
       Commands::State.new.call
     end
 
+    desc "envs", "Show the list of defined environments in .extensions.rb"
+    def envs
+      Commands::Envs.new.call
+    end
+
     desc "version", "Show Rexer version"
     def version
       puts Rexer::VERSION
