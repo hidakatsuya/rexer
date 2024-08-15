@@ -32,9 +32,7 @@ module Rexer
         end
 
         def source
-          @source ||= definition.source.then do |src|
-            Source.const_get(src.type.capitalize).new(**src.options)
-          end
+          @source ||= Source.from_definition(definition.source)
         end
       end
 
@@ -93,7 +91,10 @@ module Rexer
         private
 
         def reload_source
-          source.update(theme_dir.to_s)
+          theme_dir.to_s.then { |dir|
+            FileUtils.rm_rf(dir)
+            source.load(dir)
+          }
         end
       end
     end

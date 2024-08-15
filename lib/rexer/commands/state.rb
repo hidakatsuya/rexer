@@ -39,10 +39,8 @@ module Rexer
         end
       end
 
-      def source_info(source_def)
-        source_def.then {
-          Source.const_get(_1.type.capitalize).new(**_1.options).info
-        }
+      def source_info(definition_source)
+        Source.from_definition(definition_source).info
       end
 
       def no_lock_file_found
