@@ -22,21 +22,21 @@ module Rexer
         old_data.themes - new_data.themes
       end
 
-      def changed_plugins
+      def source_changed_plugins
         old_plugins = old_data.plugins
 
         (new_data.plugins & old_plugins).select do |new_plugin|
           old_plugin = old_plugins.find { _1.name == new_plugin.name }
-          plugin_changed?(old_plugin, new_plugin)
+          plugin_source_changed?(old_plugin, new_plugin)
         end
       end
 
-      def changed_themes
+      def source_changed_themes
         old_themes = old_data.themes
 
         (new_data.themes & old_themes).select do |new_theme|
           old_theme = old_themes.find { _1.name == new_theme.name }
-          theme_changed?(old_theme, new_theme)
+          theme_source_changed?(old_theme, new_theme)
         end
       end
 
@@ -44,11 +44,11 @@ module Rexer
 
       attr_reader :old_data, :new_data
 
-      def plugin_changed?(old_plugin, new_plugin)
+      def plugin_source_changed?(old_plugin, new_plugin)
         old_plugin.source != new_plugin.source
       end
 
-      def theme_changed?(old_theme, new_theme)
+      def theme_source_changed?(old_theme, new_theme)
         old_theme.source != new_theme.source
       end
     end

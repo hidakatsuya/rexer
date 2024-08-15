@@ -28,7 +28,7 @@ module Rexer
 
         install(diff.added_themes, diff.added_plugins)
         uninstall(diff.deleted_themes, diff.deleted_plugins)
-        update(diff.changed_themes, diff.changed_plugins)
+        reload_source(diff.source_changed_themes, diff.source_changed_plugins)
 
         create_lock_file(definition.env)
         print_state
@@ -64,13 +64,13 @@ module Rexer
         end
       end
 
-      def update(themes, plugins)
+      def reload_source(themes, plugins)
         themes.each do
-          Extension::Theme::Updater.new(_1).update
+          Extension::Theme::SourceReloader.new(_1).reload
         end
 
         plugins.each do
-          Extension::Plugin::Updater.new(_1).update
+          Extension::Plugin::SourceReloader.new(_1).reload
         end
       end
 

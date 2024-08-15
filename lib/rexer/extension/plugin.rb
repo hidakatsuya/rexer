@@ -99,6 +99,21 @@ module Rexer
           source.update(plugin_dir.to_s)
         end
       end
+
+      class SourceReloader < Base
+        def reload
+          return unless plugin_exists?
+
+          reload_source
+          run_db_migrate
+        end
+
+        private
+
+        def reload_source
+          source.update(plugin_dir.to_s)
+        end
+      end
     end
   end
 end

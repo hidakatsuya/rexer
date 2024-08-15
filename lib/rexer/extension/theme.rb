@@ -82,6 +82,20 @@ module Rexer
           source.update(theme_dir.to_s)
         end
       end
+
+      class SourceReloader < Base
+        def reload
+          return unless theme_exists?
+
+          reload_source
+        end
+
+        private
+
+        def reload_source
+          source.update(theme_dir.to_s)
+        end
+      end
     end
   end
 end
