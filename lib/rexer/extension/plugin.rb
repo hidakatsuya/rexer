@@ -88,7 +88,6 @@ module Rexer
 
           update_source
           run_db_migrate
-          hooks[:updated]&.call
         end
 
         private

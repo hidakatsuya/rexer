@@ -19,10 +19,6 @@ env :env3 do
     uninstalled do
       puts "plugin_a uninstalled"
     end
-
-    updated do
-      puts "plugin_a updated"
-    end
   end
 
   theme :theme_a, git: {url: "/git-server-repos/theme_a.git"} do
@@ -32,10 +28,6 @@ env :env3 do
 
     uninstalled do
       puts "theme_a uninstalled"
-    end
-
-    updated do
-      puts "theme_a updated"
     end
   end
 end

@@ -71,7 +71,6 @@ module Rexer
           return unless theme_exists?
 
           update_source
-          hooks[:updated]&.call
         end
 
         private
