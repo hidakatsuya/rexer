@@ -42,9 +42,7 @@ module Rexer
         end
 
         def source
-          @source ||= definition.source.then do |src|
-            Source.const_get(src.type.capitalize).new(**src.options)
-          end
+          @source ||= Source.from_definition(definition.source)
         end
       end
 
@@ -97,6 +95,24 @@ module Rexer
 
         def update_source
           source.update(plugin_dir.to_s)
+        end
+      end
+
+      class SourceReloader < Base
+        def reload
+          return unless plugin_exists?
+
+          reload_source
+          run_db_migrate
+        end
+
+        private
+
+        def reload_source
+          plugin_dir.to_s.then { |dir|
+            FileUtils.rm_rf(dir)
+            source.load(dir)
+          }
         end
       end
     end

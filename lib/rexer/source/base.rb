@@ -1,16 +1,16 @@
 module Rexer
   module Source
     class Base
-      def self.source_names = @source_names ||= []
-
       def self.inherited(subclass)
-        source_names << subclass.name.split("::").last.downcase.to_sym
+        Source.names << subclass.name.split("::").last.downcase.to_sym
       end
 
+      # Load the source to the given path.
       def load(_path)
         raise "Not implemented"
       end
 
+      # Update to the latest version of the source.
       def update(_path)
         raise "Not implemented"
       end

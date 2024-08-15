@@ -54,7 +54,7 @@ module Rexer
       end
 
       def build_source(opts)
-        type = opts.keys.find { Rexer::Source::Base.source_names.include?(_1) }
+        type = opts.keys.find { Rexer::Source.names.include?(_1) }
         Source.new(type, opts[type]) if type
       end
     end
