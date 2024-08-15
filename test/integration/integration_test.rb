@@ -135,4 +135,73 @@ class IntegrationTest < Test::Unit::TestCase
       assert_includes result.output, "theme_a uninstalled"
     end
   end
+
+  test "rex install with adding/removing other plugin and changing the source" do
+    docker_exec("cat /redmine/.extensions.rb").then do |result|
+      puts "x1"
+      puts result.output_str
+    end
+
+    docker_exec("/update.sh install_test:set_extensions_rb").then do |result|
+      puts result.error
+      assert_true result.success?
+    end
+
+    docker_exec("cat /redmine/.extensions.rb").then do |result|
+      puts "x2"
+      puts result.output_str
+    end
+
+    docker_exec("rex install").then do |result|
+      assert_true result.success?
+      assert_equal [
+        "Rexer: #{Rexer::VERSION}",
+        "Env: default",
+        "",
+        "Plugins:",
+        " * plugin_a (master)"
+      ], result.output
+    end
+
+    docker_exec("/update.sh install_test:set_extensions_rb_with_adding_plugin_b")
+
+    docker_exec("rex install").then do |result|
+      assert_true result.success?
+      assert_equal [
+        "Rexer: #{Rexer::VERSION}",
+        "Env: default",
+        "",
+        "Plugins:",
+        " * plugin_a (master)",
+        " * plugin_b (master)"
+      ], result.output
+    end
+
+    docker_exec("/update.sh install_test:set_extensions_rb_with_changing_source_of_plugin_a")
+
+    docker_exec("rex install").then do |result|
+      assert_true result.success?
+      assert_equal [
+        "Rexer: #{Rexer::VERSION}",
+        "Env: default",
+        "",
+        "Plugins:",
+        " * plugin_a (v0.1.0)",
+        " * plugin_b (master)"
+      ], result.output
+    end
+
+    docker_exec("/update.sh install_test:set_extensions_rb")
+
+    docker_exec("rex install").then do |result|
+      assert_true result.success?
+      assert_equal [
+        "Rexer: #{Rexer::VERSION}",
+        "Env: default",
+        "",
+        "Plugins:",
+        " * plugin_a (master)"
+      ], result.output
+    end
+  end
 end

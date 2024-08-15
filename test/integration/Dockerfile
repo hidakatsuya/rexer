@@ -28,6 +28,7 @@ RUN mkdir /rexer-src && \
 #
 WORKDIR /git-server-repos
 RUN git init --bare plugin_a.git
+RUN git init --bare plugin_b.git
 RUN git init --bare theme_a.git
 
 #
@@ -35,12 +36,20 @@ RUN git init --bare theme_a.git
 #
 WORKDIR /git-local-repos
 COPY test/integration/docker/plugin_a plugin_a
+COPY test/integration/docker/plugin_b plugin_b
 COPY test/integration/docker/theme_a theme_a
 
 # Plugin A
 WORKDIR /git-local-repos/plugin_a
 RUN git init && \
     git remote add origin /git-server-repos/plugin_a.git && \
+    git add . && git commit -m "commit" && git push origin master && \
+    git tag -a v0.1.0 -m "v0.1.0" && git push origin v0.1.0 && \
+    git switch -c stable && git push origin stable
+# Plugin B
+WORKDIR /git-local-repos/plugin_b
+RUN git init && \
+    git remote add origin /git-server-repos/plugin_b.git && \
     git add . && git commit -m "commit" && git push origin master && \
     git tag -a v0.1.0 -m "v0.1.0" && git push origin v0.1.0 && \
     git switch -c stable && git push origin stable
