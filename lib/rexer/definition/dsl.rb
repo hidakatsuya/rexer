@@ -11,7 +11,7 @@ module Rexer
         @plugins << Definition::Plugin.new(
           name: name,
           source: build_source(opts),
-          hooks: build_hooks(hooks, %i[installed uninstalled updated]),
+          hooks: build_hooks(hooks, %i[installed uninstalled]),
           env: @env
         )
       end
@@ -20,7 +20,7 @@ module Rexer
         @themes << Definition::Theme.new(
           name: name,
           source: build_source(opts),
-          hooks: build_hooks(hooks, %i[installed uninstalled updated]),
+          hooks: build_hooks(hooks, %i[installed uninstalled]),
           env: @env
         )
       end
