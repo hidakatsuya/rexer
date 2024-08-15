@@ -118,8 +118,7 @@ class IntegrationTest < Test::Unit::TestCase
 
     docker_exec("rex update").then do |result|
       assert_true result.success?
-      assert_includes result.output, "plugin_a updated"
-      assert_includes result.output, "theme_a updated"
+      assert_equal "", result.output_str
     end
 
     docker_exec("cat /redmine/plugins/plugin_a/README").then do |result|

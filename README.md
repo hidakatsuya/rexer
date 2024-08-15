@@ -117,10 +117,6 @@ plugin :redmica_s3, github: { repo: "redmica/redmica_s3" } do
   uninstalled do
     Pathname.new("config", "s3.yml").delete
   end
-
-  updated do
-    puts "updated"
-  end
 end
 ```
 
