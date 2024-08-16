@@ -141,19 +141,8 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   test "rex install with adding/removing other plugin and changing the source" do
-    docker_exec("cat /redmine/.extensions.rb").then do |result|
-      puts "x1"
-      puts result.output_str
-    end
-
     docker_exec("/update.sh install_test:set_extensions_rb").then do |result|
-      puts result.error
       assert_true result.success?
-    end
-
-    docker_exec("cat /redmine/.extensions.rb").then do |result|
-      puts "x2"
-      puts result.output_str
     end
 
     docker_exec("rex install").then do |result|
