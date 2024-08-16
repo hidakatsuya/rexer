@@ -51,6 +51,7 @@ module Rexer
           return if plugin_exists?
 
           load_from_source
+          run_bundle_install
           run_db_migrate
           hooks[:installed]&.call
         end
@@ -59,6 +60,13 @@ module Rexer
 
         def load_from_source
           source.load(plugin_dir.to_s)
+        end
+
+        def run_bundle_install
+          return unless plugin_dir.join("Gemfile").exist?
+
+          _, error, status = Open3.capture3("bundle install")
+          raise error unless status.success?
         end
       end
 

@@ -52,6 +52,10 @@ class IntegrationTest < Test::Unit::TestCase
       assert_includes result.output.last, "theme_a"
     end
 
+    docker_exec("bundle show | grep prawn").then do |result|
+      assert_true result.success?
+    end
+
     docker_exec("bin/rails r 'puts Hello.table_name'").then do |result|
       assert_equal "hellos", result.output_str
     end
