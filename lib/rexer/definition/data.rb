@@ -2,12 +2,11 @@ module Rexer
   module Definition
     class Data
       attr_accessor :env
-      attr_reader :config, :version
+      attr_reader :version
 
-      def initialize(plugins, themes, config, env: nil, version: nil)
+      def initialize(plugins, themes, env: nil, version: nil)
         @plugins = plugins
         @themes = themes
-        @config = config
         @env = env
         @version = version
       end

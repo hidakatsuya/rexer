@@ -10,17 +10,6 @@ module Rexer
       end
     end
 
-    Config = ::Data.define(
-      # The prefix of the command such as bundle install and bin/rails redmine:plugins:migrate.
-      #
-      # For example, if the command_prefix is set "docker compose exec -T app",
-      # then bundle install will be executed as follows:
-      #
-      #   docker compose exec -T app bundle install
-      #
-      :command_prefix
-    )
-
     Source = ::Data.define(:type, :options)
 
     Plugin = ::Data.define(:name, :source, :hooks, :env) do

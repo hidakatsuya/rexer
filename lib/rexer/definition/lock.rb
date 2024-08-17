@@ -27,7 +27,7 @@ module Rexer
         end
 
         def to_data
-          Definition::Data.new(@plugins, @themes, @config, **lock_state)
+          Definition::Data.new(@plugins, @themes, **lock_state)
         end
 
         private
