@@ -23,9 +23,9 @@ module IntegrationHelper
 
   def container_name = "rexer-test-container"
 
-  def run_with_capture(command, raise: false)
+  def run_with_capture(command, raise_on_error: false)
     Result.new(*Open3.capture3(command)) do |result|
-      raise result.error if raise && !result.success?
+      raise result.error if raise_on_error && !result.success?
     end
   end
 
@@ -36,11 +36,11 @@ module IntegrationHelper
   end
 
   def setup_rexer
-    docker_exec("/setup_rexer.sh", raise: true)
+    docker_exec("/setup_rexer.sh", raise_on_error: true)
   end
 
   def docker_build
-    image_exists = run_with_capture("docker inspect #{image_name}", raise: true).success?
+    image_exists = run_with_capture("docker inspect #{image_name}", raise_on_error: true).success?
 
     system "rake rexer:test:build_integration_test_image", exception: true unless image_exists
   end
@@ -48,7 +48,7 @@ module IntegrationHelper
   def docker_launch
     run_with_capture(
       "docker run --rm -d -v rexer-redmine-bundle-cache:/redmine/vendor/cache -v $PWD:/rexer-src --name #{container_name} #{image_name}",
-      raise: true
+      raise_on_error: true
     )
 
     try = 0
@@ -59,12 +59,12 @@ module IntegrationHelper
     end
   end
 
-  def docker_exec(*command, raise: false)
-    run_with_capture("docker exec #{container_name} #{command.join(" && ")}", raise:)
+  def docker_exec(*command, raise_on_error: false)
+    run_with_capture("docker exec #{container_name} #{command.join(" && ")}", raise_on_error:)
   end
 
   def docker_stop
-    run_with_capture("docker container stop -t 0 #{container_name} && docker container rm #{container_name}", raise: true)
+    run_with_capture("docker container stop -t 0 #{container_name} && docker container rm #{container_name}", raise_on_error: true)
   end
 
   def legacy_theme_dir?
