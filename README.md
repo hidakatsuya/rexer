@@ -76,7 +76,7 @@ Installs extensions in the specified ENV environment and makes them available fo
 
 #### rex update
 
-Loads `.extensions.lock` and updates the currently installed extensions to the latest version. `.extensions.rb` is NOt referenced in this command.
+Loads `.extensions.lock` and updates the currently installed extensions to the latest version. `.extensions.rb` is NOT referenced in this command.
 
 ### Defining for each environment and extension
 
