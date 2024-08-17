@@ -5,6 +5,7 @@ module Rexer
         @plugins = []
         @themes = []
         @env = env
+        @config = nil
       end
 
       def plugin(name, **opts, &hooks)
@@ -32,8 +33,12 @@ module Rexer
         @themes += data.themes
       end
 
+      def config(command_prefix: nil)
+        @config = Definition::Config.new(command_prefix)
+      end
+
       def to_data
-        Definition::Data.new(@plugins, @themes)
+        Definition::Data.new(@plugins, @themes, @config)
       end
 
       private

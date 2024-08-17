@@ -17,7 +17,7 @@ module Rexer
       private
 
       def install_initially(definition)
-        install(definition.themes, definition.plugins)
+        install(definition.themes, definition.plugins, definition.config)
 
         create_lock_file(definition.env)
         print_state
@@ -26,8 +26,8 @@ module Rexer
       def apply_diff(lock_definition, definition)
         diff = lock_definition.diff(definition)
 
-        install(diff.added_themes, diff.added_plugins)
-        uninstall(diff.deleted_themes, diff.deleted_plugins)
+        install(diff.added_themes, diff.added_plugins, definition.config)
+        uninstall(diff.deleted_themes, diff.deleted_plugins, definition.config)
         reload_source(diff.source_changed_themes, diff.source_changed_plugins)
 
         create_lock_file(definition.env)
@@ -44,23 +44,23 @@ module Rexer
         Definition::Lock.load_data if Definition::Lock.file.exist?
       end
 
-      def install(themes, plugins)
+      def install(themes, plugins, config)
         themes.each do
           Extension::Theme::Installer.new(_1).install
         end
 
         plugins.each do
-          Extension::Plugin::Installer.new(_1).install
+          Extension::Plugin::Installer.new(_1, config).install
         end
       end
 
-      def uninstall(themes, plugins)
+      def uninstall(themes, plugins, config)
         themes.each do
           Extension::Theme::Uninstaller.new(_1).uninstall
         end
 
         plugins.each do
-          Extension::Plugin::Uninstaller.new(_1).uninstall
+          Extension::Plugin::Uninstaller.new(_1, config).uninstall
         end
       end
 
