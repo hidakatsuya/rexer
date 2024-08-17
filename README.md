@@ -120,6 +120,16 @@ plugin :redmica_s3, github: { repo: "redmica/redmica_s3" } do
 end
 ```
 
+### Configuring the command prefix
+
+You can set a prefix for the commands such as `bundle install` that Rexer executes with the `REXER_COMMAND_PREFIX` environment variable.
+
+```
+export REXER_COMMAND_PREFIX="docker compose exec -T app"
+```
+
+In the above case, the `bin/rails redmine:plugins:migrate` command is executed as `docker compose exec -T app bin/rails redmine:plugins:migrate`.
+
 ## Developing
 
 ### Running tests

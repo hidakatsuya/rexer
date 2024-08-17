@@ -36,13 +36,17 @@ module Rexer
           return unless needs_db_migration?
 
           envs = {"NAME" => name.to_s}.merge(extra_envs)
-          _, error, status = Open3.capture3(envs, "bin/rails redmine:plugins:migrate")
+          _, error, status = Open3.capture3(envs, cmd_with_prefix("bin/rails redmine:plugins:migrate"))
 
           raise error unless status.success?
         end
 
         def source
           @source ||= Source.from_definition(definition.source)
+        end
+
+        def cmd_with_prefix(command)
+          [Rexer.config.command_prefix, command].compact.join(" ")
         end
       end
 
@@ -65,7 +69,7 @@ module Rexer
         def run_bundle_install
           return unless plugin_dir.join("Gemfile").exist?
 
-          _, error, status = Open3.capture3("bundle install")
+          _, error, status = Open3.capture3(cmd_with_prefix("bundle install"))
           raise error unless status.success?
         end
       end

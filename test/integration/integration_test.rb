@@ -56,8 +56,8 @@ class IntegrationTest < Test::Unit::TestCase
       assert_true result.success?
     end
 
-    docker_exec("bin/rails r 'puts Hello.table_name'").then do |result|
-      assert_equal "hellos", result.output_str
+    docker_exec(%!bin/rails r "puts ActiveRecord::Base.connection.table_exists?('hellos')"!).then do |result|
+      assert_equal "true", result.output_str
     end
 
     docker_exec("rex uninstall").then do |result|
@@ -72,6 +72,10 @@ class IntegrationTest < Test::Unit::TestCase
     docker_exec("ls #{theme_dir}").then do |result|
       expected_files = legacy_theme_dir? ? %w[README alternate classic] : %w[README]
       assert_equal expected_files, result.output
+    end
+
+    docker_exec(%!bin/rails r "puts ActiveRecord::Base.connection.table_exists?('hellos')"!).then do |result|
+      assert_equal "false", result.output_str
     end
 
     docker_exec("rex state").then do |result|
