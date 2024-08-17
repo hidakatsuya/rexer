@@ -68,11 +68,12 @@ Commands:
 
 Installs extensions in the specified ENV environment and makes them available for use. Specifically, it does the following:
 
-* If the specified ENV is NOT currently installed, it adds all extensions in the ENV environment in `.extensions.rb`.
-* If the specified ENV is currently installed, it compares the current `.extensions.lock` with `.extensions.rb` and does the following:
-  * Installs additional extensions (the `installed` hook is executed).
-  * Uninstalls deleted extensions (the `uninstalled` hook is executed).
-  * Re-fetches extensions whose source settings has changed (for example, the `branch` or `tag` has changed) and runs the database migration if necessary.
+If the specified ENV is NOT currently installed, it adds all extensions in the ENV environment in `.extensions.rb`.
+
+If the specified ENV is currently installed, it compares the current `.extensions.lock` with `.extensions.rb` and does the following:
+* Installs additional extensions (the `installed` hook is executed).
+* Uninstalls deleted extensions (the `uninstalled` hook is executed).
+* Re-fetches extensions whose source settings has changed (for example, the `branch` or `tag` has changed) and runs the database migration if necessary.
 
 #### rex update
 
