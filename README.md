@@ -81,6 +81,8 @@ Loads `.extensions.lock` and updates the currently installed extensions to the l
 
 ### Defining for each environment and extension
 
+You can define an environment and extensions for each environment using the `env ... do - end` block.
+
 ```ruby
 theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair" }
 plugin :redmine_issues_panel, git: { url: "https://github.com/redmica/redmine_issues_panel" }
@@ -91,7 +93,14 @@ env :stable do
 end
 ```
 
-In above example, the `bleuclair` theme and the `redmine_issues_panel` plugin are defined for the `default` environment. The `bleuclair` theme and the `redmine_issues_panel` plugin are defined for the `stable` environment.
+Definitions other than `env ... do - end` are implicitly defined as `env :default do - end`. Therefore, the above is resolved as follows:
+
+* default env
+  * bleuclair (master)
+  * redmine_issues_panel (master)
+* stable env
+  * bleuclair (support-propshaft)
+  * redmine_issues_panel (v1.0.2)
 
 If you want to install extensions for the `default` environment, run the following command.
 
@@ -116,6 +125,14 @@ rex install stable
 ```
 
 The above command uninstalls the extensions for the currently installed environment and installs the extensions for the `stable` environment.
+
+In addition, you can define as many environments as you like, and list the defined environments with the `rex envs` command.
+
+```
+$ rex envs
+default
+stable
+```
 
 ### Defining hooks
 
