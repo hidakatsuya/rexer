@@ -1,6 +1,8 @@
 module Rexer
   module Commands
     class Uninstall
+      include ActionCallable
+
       def initialize
         @lock_definition = Definition::Lock.load_data
       end
@@ -20,13 +22,13 @@ module Rexer
 
       def uninstall_plugins
         lock_definition.plugins.each do
-          Extension::Plugin::Uninstaller.new(_1).uninstall
+          call_action Extension::Plugin::Uninstall, _1
         end
       end
 
       def uninstall_themes
         lock_definition.themes.each do
-          Extension::Theme::Uninstaller.new(_1).uninstall
+          call_action Extension::Theme::Uninstall, _1
         end
       end
 

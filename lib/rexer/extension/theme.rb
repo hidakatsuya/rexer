@@ -1,3 +1,5 @@
+require "wisper"
+
 module Rexer
   module Extension
     module Theme
@@ -13,6 +15,8 @@ module Rexer
       end
 
       class Base
+        include Wisper::Publisher
+
         def initialize(definition)
           @definition = definition
           @name = definition.name
@@ -36,12 +40,16 @@ module Rexer
         end
       end
 
-      class Installer < Base
-        def install
+      class Install < Base
+        def call
           return if theme_exists?
+
+          broadcast(:started, "Install #{name}")
 
           load_from_source
           hooks[:installed]&.call
+
+          broadcast(:completed)
         end
 
         private
@@ -51,12 +59,16 @@ module Rexer
         end
       end
 
-      class Uninstaller < Base
-        def uninstall
+      class Uninstall < Base
+        def call
           return unless theme_exists?
+
+          broadcast(:started, "Uninstall #{name}")
 
           remove_theme
           hooks[:uninstalled]&.call
+
+          broadcast(:completed)
         end
 
         private
@@ -66,11 +78,15 @@ module Rexer
         end
       end
 
-      class Updater < Base
-        def update
+      class Update < Base
+        def call
           return unless theme_exists?
 
+          broadcast(:started, "Update #{name}")
+
           update_source
+
+          broadcast(:completed)
         end
 
         private
@@ -80,11 +96,15 @@ module Rexer
         end
       end
 
-      class SourceReloader < Base
-        def reload
+      class ReloadSource < Base
+        def call
           return unless theme_exists?
 
+          broadcast(:started, "Reload #{name} source")
+
           reload_source
+
+          broadcast(:completed)
         end
 
         private

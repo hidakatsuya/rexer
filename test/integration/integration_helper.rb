@@ -2,7 +2,6 @@ require "test_helper"
 require "open3"
 require "rake"
 
-ENV["VERBOSE"] = "1"
 ENV["RUBY_VERSION"] ||= "3.3"
 ENV["REDMINE_BRANCH_NAME"] ||= "master"
 

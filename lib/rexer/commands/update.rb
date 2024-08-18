@@ -1,6 +1,8 @@
 module Rexer
   module Commands
     class Update
+      include ActionCallable
+
       def initialize
         @lock_definition = Definition::Lock.load_data
       end
@@ -18,13 +20,13 @@ module Rexer
 
       def update_plugins
         lock_definition.plugins.each do
-          Extension::Plugin::Updater.new(_1).update
+          call_action Extension::Plugin::Update, _1
         end
       end
 
       def update_themes
         lock_definition.themes.each do
-          Extension::Theme::Updater.new(_1).update
+          call_action Extension::Theme::Update, _1
         end
       end
 

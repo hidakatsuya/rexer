@@ -20,7 +20,7 @@ class IntegrationTest < Test::Unit::TestCase
       assert_equal "No lock file found", result.output_str
     end
 
-    docker_exec("rex uninstall").then do |result|
+    docker_exec("rex uninstall -q").then do |result|
       assert_true result.success?
       assert_equal "No lock file found", result.output_str
     end
@@ -30,7 +30,7 @@ class IntegrationTest < Test::Unit::TestCase
       assert_equal %w[default env1 env2 env3], result.output
     end
 
-    docker_exec("rex install").then do |result|
+    docker_exec("rex install -q").then do |result|
       assert_true result.success?
       assert_equal [
         "Rexer: #{Rexer::VERSION}",
@@ -60,7 +60,7 @@ class IntegrationTest < Test::Unit::TestCase
       assert_equal "true", result.output_str
     end
 
-    docker_exec("rex uninstall").then do |result|
+    docker_exec("rex uninstall -q").then do |result|
       assert_true result.success?
       assert_equal "", result.output_str
     end
@@ -84,12 +84,12 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   test "rex switch" do
-    docker_exec("rex switch").then do |result|
+    docker_exec("rex switch -q").then do |result|
       assert_true result.success?
       assert_equal "No lock file found", result.output_str
     end
 
-    docker_exec("rex install env1").then do |result|
+    docker_exec("rex install env1 -q").then do |result|
       assert_true result.success?
       assert_equal [
         "Rexer: #{Rexer::VERSION}",
@@ -100,7 +100,7 @@ class IntegrationTest < Test::Unit::TestCase
       ], result.output
     end
 
-    docker_exec("rex switch env2").then do |result|
+    docker_exec("rex switch env2 -q").then do |result|
       assert_true result.success?
       assert_equal [
         "Rexer: #{Rexer::VERSION}",
@@ -116,7 +116,7 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   test "rex update and hooks" do
-    docker_exec("rex install env3").then do |result|
+    docker_exec("rex install env3 -q").then do |result|
       assert_true result.success?
       assert_includes result.output, "plugin_a installed"
       assert_includes result.output, "theme_a installed"
@@ -124,7 +124,7 @@ class IntegrationTest < Test::Unit::TestCase
 
     docker_exec("/update.sh add_readme_to_env3")
 
-    docker_exec("rex update").then do |result|
+    docker_exec("rex update -q").then do |result|
       assert_true result.success?
       assert_equal "", result.output_str
     end
@@ -137,7 +137,7 @@ class IntegrationTest < Test::Unit::TestCase
       assert_equal "update", result.output_str
     end
 
-    docker_exec("rex uninstall").then do |result|
+    docker_exec("rex uninstall -q").then do |result|
       assert_true result.success?
       assert_includes result.output, "plugin_a uninstalled"
       assert_includes result.output, "theme_a uninstalled"
@@ -149,7 +149,7 @@ class IntegrationTest < Test::Unit::TestCase
       assert_true result.success?
     end
 
-    docker_exec("rex install").then do |result|
+    docker_exec("rex install -q").then do |result|
       assert_true result.success?
       assert_equal [
         "Rexer: #{Rexer::VERSION}",
@@ -162,7 +162,7 @@ class IntegrationTest < Test::Unit::TestCase
 
     docker_exec("/update.sh install_test:set_extensions_rb_with_adding_plugin_b")
 
-    docker_exec("rex install").then do |result|
+    docker_exec("rex install -q").then do |result|
       assert_true result.success?
       assert_equal [
         "Rexer: #{Rexer::VERSION}",
@@ -176,7 +176,7 @@ class IntegrationTest < Test::Unit::TestCase
 
     docker_exec("/update.sh install_test:set_extensions_rb_with_changing_source_of_plugin_a")
 
-    docker_exec("rex install").then do |result|
+    docker_exec("rex install -q").then do |result|
       assert_true result.success?
       assert_equal [
         "Rexer: #{Rexer::VERSION}",
@@ -190,7 +190,7 @@ class IntegrationTest < Test::Unit::TestCase
 
     docker_exec("/update.sh install_test:set_extensions_rb")
 
-    docker_exec("rex install").then do |result|
+    docker_exec("rex install -q").then do |result|
       assert_true result.success?
       assert_equal [
         "Rexer: #{Rexer::VERSION}",
