@@ -1,3 +1,5 @@
+require "paint"
+
 module Rexer
   module Commands
     module ActionCallable
@@ -31,11 +33,11 @@ module Rexer
       end
 
       def completed
-        Rexer.verbosity.on(:info) { puts "done." }
+        Rexer.verbosity.on(:info) { puts Paint["done", :green] }
       end
 
       def processing(process_title)
-        Rexer.verbosity.on(:debug) { puts process_title }
+        Rexer.verbosity.on(:debug) { puts Paint[process_title, :gray] }
       end
     end
   end
