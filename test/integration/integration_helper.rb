@@ -1,6 +1,7 @@
 require "test_helper"
 require "open3"
 require "rake"
+require "securerandom"
 
 ENV["RUBY_VERSION"] ||= "3.3"
 ENV["REDMINE_BRANCH_NAME"] ||= "master"
@@ -20,15 +21,17 @@ module IntegrationHelper
     @image_name ||= "rexer-test:#{ENV["RUBY_VERSION"]}-#{ENV["REDMINE_BRANCH_NAME"]}"
   end
 
-  def container_name = "rexer-test-container"
-
   def run_with_capture(command, raise_on_error: false)
     Result.new(*Open3.capture3(command)) do |result|
       raise result.error if raise_on_error && !result.success?
     end
   end
 
+  attr_reader :container_name
+
   def docker_setup
+    @container_name = "rexer-test-#{SecureRandom.alphanumeric(8)}"
+
     docker_build
     docker_launch
     setup_rexer
@@ -64,6 +67,8 @@ module IntegrationHelper
 
   def docker_stop
     run_with_capture("docker container stop -t 0 #{container_name} && docker container rm #{container_name}", raise_on_error: true)
+
+    @container_name = nil
   end
 
   def legacy_theme_dir?
