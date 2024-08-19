@@ -1,4 +1,5 @@
 require "open3"
+require "wisper"
 
 module Rexer
   module Extension
@@ -8,6 +9,8 @@ module Rexer
       end
 
       class Base
+        include Wisper::Publisher
+
         def initialize(definition)
           @definition = definition
           @name = definition.name
@@ -36,28 +39,39 @@ module Rexer
           return unless needs_db_migration?
 
           envs = {"NAME" => name.to_s}.merge(extra_envs)
-          _, error, status = Open3.capture3(envs, cmd_with_prefix("bin/rails redmine:plugins:migrate"))
+          cmds = cmd("bundle", "exec", "rake", Rexer.verbosity.debug? ? nil : "-q", "redmine:plugins:migrate")
 
-          raise error unless status.success?
+          broadcast(:processing, "Execute #{cmds} with #{envs}")
+
+          if Rexer.verbosity.debug?
+            system(envs, cmds, exception: true)
+          else
+            _, error, status = Open3.capture3(envs, cmds)
+            raise error unless status.success?
+          end
         end
 
         def source
           @source ||= Source.from_definition(definition.source)
         end
 
-        def cmd_with_prefix(command)
-          [Rexer.config.command_prefix, command].compact.join(" ")
+        def cmd(*command)
+          [Rexer.config.command_prefix, *command].compact.join(" ")
         end
       end
 
-      class Installer < Base
-        def install
+      class Install < Base
+        def call
           return if plugin_exists?
+
+          broadcast(:started, "Install #{name}")
 
           load_from_source
           run_bundle_install
           run_db_migrate
           hooks[:installed]&.call
+
+          broadcast(:completed)
         end
 
         private
@@ -69,18 +83,25 @@ module Rexer
         def run_bundle_install
           return unless plugin_dir.join("Gemfile").exist?
 
-          _, error, status = Open3.capture3(cmd_with_prefix("bundle install"))
-          raise error unless status.success?
+          cmds = cmd("bundle", "install", Rexer.verbosity.debug? ? nil : "--quiet")
+
+          broadcast(:processing, "Execute #{cmds}")
+
+          system(cmds, exception: true)
         end
       end
 
-      class Uninstaller < Base
-        def uninstall
+      class Uninstall < Base
+        def call
           return unless plugin_exists?
+
+          broadcast(:started, "Uninstall #{name}")
 
           reset_db_migration
           remove_plugin
           hooks[:uninstalled]&.call
+
+          broadcast(:completed)
         end
 
         private
@@ -94,12 +115,16 @@ module Rexer
         end
       end
 
-      class Updater < Base
-        def update
+      class Update < Base
+        def call
           return unless plugin_exists?
+
+          broadcast(:started, "Update #{name}")
 
           update_source
           run_db_migrate
+
+          broadcast(:completed)
         end
 
         private
@@ -109,12 +134,16 @@ module Rexer
         end
       end
 
-      class SourceReloader < Base
-        def reload
+      class ReloadSource < Base
+        def call
           return unless plugin_exists?
+
+          broadcast(:started, "Reload #{name} source")
 
           reload_source
           run_db_migrate
+
+          broadcast(:completed)
         end
 
         private

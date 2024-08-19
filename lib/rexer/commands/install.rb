@@ -1,6 +1,8 @@
 module Rexer
   module Commands
     class Install
+      include ActionCallable
+
       def call(env)
         definition = load_definition(env)
         lock_definition = load_lock_definition
@@ -46,31 +48,31 @@ module Rexer
 
       def install(themes, plugins)
         themes.each do
-          Extension::Theme::Installer.new(_1).install
+          call_action Extension::Theme::Install, _1
         end
 
         plugins.each do
-          Extension::Plugin::Installer.new(_1).install
+          call_action Extension::Plugin::Install, _1
         end
       end
 
       def uninstall(themes, plugins)
         themes.each do
-          Extension::Theme::Uninstaller.new(_1).uninstall
+          call_action Extension::Theme::Uninstall, _1
         end
 
         plugins.each do
-          Extension::Plugin::Uninstaller.new(_1).uninstall
+          call_action Extension::Plugin::Uninstall, _1
         end
       end
 
       def reload_source(themes, plugins)
         themes.each do
-          Extension::Theme::SourceReloader.new(_1).reload
+          call_action Extension::Theme::ReloadSource, _1
         end
 
         plugins.each do
-          Extension::Plugin::SourceReloader.new(_1).reload
+          call_action Extension::Plugin::ReloadSource, _1
         end
       end
 

@@ -5,7 +5,7 @@ require "rexer"
 begin
   Rexer::Cli.start(ARGV)
 rescue => e
-  puts "ERROR (#{e.class}): #{e.message}"
+  puts "\e[31mERROR (#{e.class}): #{e.message}\e[0m"
   puts e.backtrace if ENV["VERBOSE"]
   exit 1
 end

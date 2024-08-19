@@ -18,8 +18,12 @@ module Rexer
     :command_prefix
   )
 
-  def self.config
-    @config ||= Config.new(command_prefix: ENV["REXER_COMMAND_PREFIX"])
+  class << self
+    attr_accessor :verbosity
+
+    def config
+      @config ||= Config.new(command_prefix: ENV["REXER_COMMAND_PREFIX"])
+    end
   end
 end
 

@@ -5,6 +5,7 @@ module Rexer
     def self.exit_on_failure? = true
 
     class_option :verbose, type: :boolean, aliases: "-v", desc: "Detailed output"
+    class_option :quiet, type: :boolean, aliases: "-q", desc: "Minimal output"
 
     desc "install [ENV]", "Install the definitions in .extensions.rb for the specified environment"
     def install(env = "default")
@@ -50,6 +51,15 @@ module Rexer
 
     def initialize_options
       ENV["VERBOSE"] = "1" if options[:verbose]
+
+      verbosity_level = if options[:verbose]
+        :debug
+      elsif options[:quiet]
+        :error
+      else
+        :info
+      end
+      Rexer.verbosity = Commands::Verbosity.new(verbosity_level)
     end
   end
 end
