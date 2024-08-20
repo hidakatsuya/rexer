@@ -1,13 +1,13 @@
 # Rexer: Redmine Extension manager
 
+[![Build](https://github.com/hidakatsuya/rexer/actions/workflows/build.yml/badge.svg)](https://github.com/hidakatsuya/rexer/actions/workflows/build.yml)
+[![Gem Version](https://badge.fury.io/rb/rexer.svg)](https://badge.fury.io/rb/rexer)
+
 Rexer is a command-line tool for managing Redmine Extension (Plugin and Theme).
 
 It is mainly aimed at helping with the development of Redmine and its plugins, allowing you to define extensions in a Ruby DSL and install, uninstall, update, and switch between different sets of the extensions.
 
-[![asciicast](https://asciinema.org/a/672754.svg)](https://asciinema.org/a/672754)
-
-[![Build](https://github.com/hidakatsuya/rexer/actions/workflows/build.yml/badge.svg)](https://github.com/hidakatsuya/rexer/actions/workflows/build.yml)
-[![Gem Version](https://badge.fury.io/rb/rexer.svg)](https://badge.fury.io/rb/rexer)
+[![asciicast](https://asciinema.org/a/672754.svg?9)](https://asciinema.org/a/672754)
 
 ## What is Redmine Extension?
 
