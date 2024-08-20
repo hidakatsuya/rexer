@@ -1,4 +1,5 @@
 require "thor"
+require "dotenv"
 
 module Rexer
   class Cli < Thor
@@ -44,6 +45,7 @@ module Rexer
 
     def initialize(*)
       super
+      Dotenv.load
       initialize_options
     end
 

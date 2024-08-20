@@ -65,6 +65,7 @@ RUN git init && \
 WORKDIR /redmine
 RUN git clone -b $REDMINE_BRANCH_NAME --depth 1 https://github.com/redmine/redmine.git .
 COPY test/integration/docker/database.yml config/database.yml
+COPY test/integration/docker/dotenv .env
 
 # Directory for the bundle cache
 RUN mkdir /redmine-bundle

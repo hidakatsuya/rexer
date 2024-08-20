@@ -24,4 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "zeitwerk", "~> 2.6"
   spec.add_dependency "wisper", "~> 3.0"
   spec.add_dependency "paint", "~> 2.3"
+  spec.add_dependency "dotenv", "~> 3.1"
 end
