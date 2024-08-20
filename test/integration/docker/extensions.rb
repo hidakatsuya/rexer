@@ -13,7 +13,7 @@ end
 env :env3 do
   plugin :plugin_a, git: {url: "/git-server-repos/plugin_a.git", branch: "stable"} do
     installed do
-      puts "plugin_a installed"
+      puts ERB.new("<%= 'plugin_a installed' %>").result
     end
 
     uninstalled do

@@ -1,5 +1,6 @@
 require "thor"
 require "dotenv"
+require "erb"
 
 module Rexer
   class Cli < Thor
