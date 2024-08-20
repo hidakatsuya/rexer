@@ -19,6 +19,8 @@ Rexer is tested with Redmine v5.1 and trunk.
 
 ## Usage
 
+[![asciicast](https://asciinema.org/a/672754.svg)](https://asciinema.org/a/672754)
+
 ### Quick Start
 
 First, create a `.extensions.rb` file in the root directory of the Redmine application.
