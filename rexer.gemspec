@@ -6,8 +6,8 @@ Gem::Specification.new do |spec|
   spec.authors = ["Katsuya Hidaka"]
   spec.email = ["hidakatsuya@gmail.com"]
 
-  spec.summary = "A tool for managing Redmine Plugins and Themes"
-  spec.description = "Rexer is a tool for managing Redmine Extension (Plugin and Themes). It allows you to define extensions in a Ruby DSL and install, uninstall, update, and switch between different sets of the extensions."
+  spec.summary = "A command-line tool for managing Redmine Plugins and Themes"
+  spec.description = "Rexer is a command-line tool for managing Redmine Extension (Plugin and Themes). It allows you to define extensions in a Ruby DSL and install, uninstall, update, and switch between different sets of the extensions."
   spec.homepage = "https://github.com/hidakatsuya/rexer"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"
