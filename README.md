@@ -1,11 +1,17 @@
 # Rexer: Redmine Extension manager
 
-Rexer is a tool for managing Redmine Extension, which means Redmine [Plugin](https://www.redmine.org/projects/redmine/wiki/Plugins) and [Theme](https://www.redmine.org/projects/redmine/wiki/Themes) in this tool.
+Rexer is a command-line tool for managing Redmine Extension (Plugin and Theme).
 
 It is mainly aimed at helping with the development of Redmine and its plugins, allowing you to define extensions in a Ruby DSL and install, uninstall, update, and switch between different sets of the extensions.
 
+[![asciicast](https://asciinema.org/a/672754.svg)](https://asciinema.org/a/672754)
+
 [![Build](https://github.com/hidakatsuya/rexer/actions/workflows/build.yml/badge.svg)](https://github.com/hidakatsuya/rexer/actions/workflows/build.yml)
 [![Gem Version](https://badge.fury.io/rb/rexer.svg)](https://badge.fury.io/rb/rexer)
+
+## What is Redmine Extension?
+
+Redmine [Plugin](https://www.redmine.org/projects/redmine/wiki/Plugins) and [Theme](https://www.redmine.org/projects/redmine/wiki/Themes) are called Redmine Extension in this tool.
 
 ## Installation
 
@@ -19,16 +25,11 @@ Rexer is tested with Redmine v5.1 and trunk.
 
 ## Usage
 
-[![asciicast](https://asciinema.org/a/672754.svg)](https://asciinema.org/a/672754)
-
-### Quick Start
-
-First, create a `.extensions.rb` file in the root directory of the Redmine application.
+Create a `.extensions.rb` in the root directory of the Redmine application, and define the extensions you want to install.
 
 ```ruby
 theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair", branch: "support-propshaft" }
 
-plugin :view_customize, github: { repo: "onozaty/redmine-view-customize", tag: "v3.5.2" }
 plugin :redmine_issues_panel, git: { url: "https://github.com/redmica/redmine_issues_panel", tag: "v1.0.2" }
 ```
 
@@ -38,10 +39,18 @@ Then, run the following command in the root directory of the Redmine application
 rex install
 ```
 
-This command installs plugins and themes defined in the `.extensions.rb` file and generates the `.extensions.lock` file.
+This command performs the following steps for each extension defined in the `.extensions.rb` to install it and generates a `.extensions.lock`.
+
+For plugins:
+* Load the plugin from the specified `git` or `github` repository.
+* Run the `bundle install` command if the plugin has a `Gemfile`.
+* Run the `bundle exec rake redmine:plugins:migrate NAME=<plugin_name>` command if the plugin has any database migration.
+
+For themes:
+* Load the theme from the specified `git` or `github` repository.
 
 > [!NOTE]
-> The `.extensions.lock` file is a file that locks the state of the installed extensions, but it's NOT a file that locks the version of the extensions.
+> The `.extensions.lock` is a file for preserving the state of installed extensions, but not the version of an extension.
 
 If you want to uninstall the extensions, run the following command.
 
@@ -49,9 +58,9 @@ If you want to uninstall the extensions, run the following command.
 rex uninstall
 ```
 
-This command uninstalls the extensions and deletes the `.extensions.lock` file.
+This command uninstalls the extensions and deletes the `.extensions.lock`.
 
-### Commands
+## Commands
 
 ```
 $ rex
@@ -66,7 +75,7 @@ Commands:
   rex version         # Show Rexer version
 ```
 
-#### rex install [ENV]
+### rex install [ENV]
 
 Installs extensions in the specified ENV environment and makes them available for use. Specifically, it does the following:
 
@@ -75,11 +84,13 @@ If the specified ENV is NOT currently installed, it adds all extensions in the E
 If the specified ENV is currently installed, it compares the current `.extensions.lock` with `.extensions.rb` and does the following:
 * Installs additional extensions (the `installed` hook is executed).
 * Uninstalls deleted extensions (the `uninstalled` hook is executed).
-* Re-fetches extensions whose source settings has changed (for example, the `branch` or `tag` has changed) and runs the database migration if necessary.
+* Reload extensions whose source settings has changed (for example, the `branch` or `tag` has changed) and runs the database migration if necessary.
 
-#### rex update
+### rex update
 
 Loads `.extensions.lock` and updates the currently installed extensions to the latest version. `.extensions.rb` is NOT referenced in this command.
+
+## Advanced Usage
 
 ### Defining for each environment and extension
 
