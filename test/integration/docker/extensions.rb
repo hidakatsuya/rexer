@@ -2,7 +2,7 @@ theme :theme_a, git: {url: "/git-server-repos/theme_a.git"}
 plugin :plugin_a, git: {url: "/git-server-repos/plugin_a.git"}
 
 env :env1 do
-  plugin :plugin_a, git: {url: "/git-server-repos/plugin_a.git", tag: "v0.1.0"}
+  plugin :plugin_a, git: {url: "/git-server-repos/plugin_a.git", tag: ENV["PLUGIN_A_LATEST_VERSION"]}
 end
 
 env :env2 do
