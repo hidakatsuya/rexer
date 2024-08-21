@@ -1,7 +1,16 @@
-# Rexer: Redmine Extension manager
+<div align="center">
+  <h1>Rexer</h1>
+  <p>Redmine Extension (Plugin and Theme) manager</p>
+</div>
 
-[![Build](https://github.com/hidakatsuya/rexer/actions/workflows/build.yml/badge.svg)](https://github.com/hidakatsuya/rexer/actions/workflows/build.yml)
-[![Gem Version](https://badge.fury.io/rb/rexer.svg)](https://badge.fury.io/rb/rexer)
+<p align="center">
+  <a href="https://github.com/hidakatsuya/rexer/actions/workflows/build.yml">
+    <img src="https://github.com/hidakatsuya/rexer/actions/workflows/build.yml/badge.svg" alt="Build">
+  </a>
+  <a href="https://badge.fury.io/rb/rexer">
+    <img src="https://badge.fury.io/rb/rexer.svg" alt="Gem Version">
+  </a>
+</p>
 
 Rexer is a command-line tool for managing Redmine Extension (Plugin and Theme).
 
