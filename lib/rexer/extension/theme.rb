@@ -42,9 +42,12 @@ module Rexer
 
       class Install < Base
         def call
-          return if theme_exists?
-
           broadcast(:started, "Install #{name}")
+
+          if theme_exists?
+            broadcast(:skipped, "Already exists")
+            return
+          end
 
           load_from_source
           hooks[:installed]&.call
@@ -61,9 +64,12 @@ module Rexer
 
       class Uninstall < Base
         def call
-          return unless theme_exists?
-
           broadcast(:started, "Uninstall #{name}")
+
+          unless theme_exists?
+            broadcast(:skipped, "Not exists")
+            return
+          end
 
           remove_theme
           hooks[:uninstalled]&.call

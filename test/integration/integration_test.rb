@@ -142,6 +142,15 @@ class IntegrationTest < Test::Unit::TestCase
       assert_includes result.output, "plugin_a uninstalled"
       assert_includes result.output, "theme_a uninstalled"
     end
+
+    docker_exec("rex install env1 -q").then do |result|
+      assert_true result.success?
+    end
+
+    docker_exec("rex update").then do |result|
+      assert_true result.success?
+      assert_includes result.output_str, "plugin_a ... #{Paint["skipped (Not updatable)", :yellow]}"
+    end
   end
 
   test "rex install with adding/removing other plugin and changing the source" do

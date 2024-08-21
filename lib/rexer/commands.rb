@@ -36,6 +36,10 @@ module Rexer
         Rexer.verbosity.on(:info) { puts Paint["done", :green] }
       end
 
+      def skipped(reason)
+        Rexer.verbosity.on(:info) { puts Paint["skipped (#{reason})", :yellow] }
+      end
+
       def processing(process_title)
         Rexer.verbosity.on(:debug) { puts Paint[process_title, :gray] }
       end

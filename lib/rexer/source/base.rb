@@ -15,6 +15,12 @@ module Rexer
         raise "Not implemented"
       end
 
+      # Check if the source can be updated to a newer version.
+      def updatable?
+        raise "Not implemented"
+      end
+
+      # Return the status of the source.
       def info = ""
     end
   end
