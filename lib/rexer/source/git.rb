@@ -19,6 +19,10 @@ module Rexer
         load(path)
       end
 
+      def updatable?
+        !branch.nil?
+      end
+
       def info
         branch || tag || ref || "master"
       end

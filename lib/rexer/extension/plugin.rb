@@ -62,9 +62,12 @@ module Rexer
 
       class Install < Base
         def call
-          return if plugin_exists?
-
           broadcast(:started, "Install #{name}")
+
+          if plugin_exists?
+            broadcast(:skipped, "Already exists")
+            return
+          end
 
           load_from_source
           run_bundle_install
@@ -93,9 +96,12 @@ module Rexer
 
       class Uninstall < Base
         def call
-          return unless plugin_exists?
-
           broadcast(:started, "Uninstall #{name}")
+
+          unless plugin_exists?
+            broadcast(:skipped, "Not exists")
+            return
+          end
 
           reset_db_migration
           remove_plugin
@@ -120,6 +126,11 @@ module Rexer
           return unless plugin_exists?
 
           broadcast(:started, "Update #{name}")
+
+          unless source.updatable?
+            broadcast(:skipped, "Not updatable")
+            return
+          end
 
           update_source
           run_db_migrate
