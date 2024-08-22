@@ -9,6 +9,11 @@ module Rexer
     class_option :verbose, type: :boolean, aliases: "-v", desc: "Detailed output"
     class_option :quiet, type: :boolean, aliases: "-q", desc: "Minimal output"
 
+    desc "init", "Create a new .extensions.rb file"
+    def init
+      Commands::Init.new.call
+    end
+
     desc "install [ENV]", "Install the definitions in .extensions.rb for the specified environment"
     def install(env = "default")
       Commands::Install.new.call(env&.to_sym)

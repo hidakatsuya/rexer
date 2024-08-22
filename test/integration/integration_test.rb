@@ -210,4 +210,23 @@ class IntegrationTest < Test::Unit::TestCase
       ], result.output
     end
   end
+
+  test "rex init" do
+    docker_exec("rex init").then do |result|
+      assert_false result.success?
+      assert_equal Paint[".extensions.rb already exists", :red], result.output_str
+    end
+
+    docker_exec("rm .extensions.rb", raise_on_error: true)
+
+    docker_exec("rex init").then do |result|
+      assert_true result.success?
+      assert_includes result.output_str, "created"
+    end
+
+    docker_exec("cat .extensions.rb").then do |result|
+      assert_true result.success?
+      assert_includes result.output_str, "Define themes and plugins you want to use in your Redmine here"
+    end
+  end
 end

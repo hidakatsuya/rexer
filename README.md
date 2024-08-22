@@ -34,7 +34,13 @@ Rexer is tested with Redmine v5.1 and trunk.
 
 ## Usage
 
-Create a `.extensions.rb` in the root directory of the Redmine application, and define the extensions you want to install.
+Run the following command in the root directory of the Redmine application.
+
+```
+rex init
+```
+
+This command generates a `.extensions.rb`, so define the extensions you want to install in the file like below.
 
 ```ruby
 theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair", branch: "support-propshaft" }
