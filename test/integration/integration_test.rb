@@ -27,7 +27,7 @@ class IntegrationTest < Test::Unit::TestCase
 
     docker_exec("rex envs").then do |result|
       assert_true result.success?
-      assert_equal %w[default env1 env2 env3], result.output
+      assert_equal %w[default env1 env2 env3 env4].sort, result.output.sort
     end
 
     docker_exec("rex install -q").then do |result|
@@ -108,6 +108,17 @@ class IntegrationTest < Test::Unit::TestCase
         "",
         "Themes:",
         " * theme_a (master)",
+        "",
+        "Plugins:",
+        " * plugin_a (master)"
+      ], result.output
+    end
+
+    docker_exec("rex switch env4 -q").then do |result|
+      assert_true result.success?
+      assert_equal [
+        "Rexer: #{Rexer::VERSION}",
+        "Env: env4",
         "",
         "Plugins:",
         " * plugin_a (master)"

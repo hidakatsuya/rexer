@@ -25,11 +25,13 @@ module Rexer
         )
       end
 
-      def env(env_name, &dsl)
-        data = self.class.new(env_name).tap { _1.instance_eval(&dsl) }.to_data
+      def env(*env_names, &dsl)
+        env_names.each do |env_name|
+          data = self.class.new(env_name).tap { _1.instance_eval(&dsl) }.to_data
 
-        @plugins += data.plugins
-        @themes += data.themes
+          @plugins += data.plugins
+          @themes += data.themes
+        end
       end
 
       def to_data
