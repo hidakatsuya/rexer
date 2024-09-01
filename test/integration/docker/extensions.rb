@@ -1,5 +1,4 @@
 theme :theme_a, git: {url: "/git-server-repos/theme_a.git"}
-plugin :plugin_a, git: {url: "/git-server-repos/plugin_a.git"}
 
 env :env1 do
   plugin :plugin_a, git: {url: "/git-server-repos/plugin_a.git", tag: ENV["PLUGIN_A_LATEST_VERSION"]}
@@ -30,4 +29,8 @@ env :env3 do
       puts "theme_a uninstalled"
     end
   end
+end
+
+env :default, :env4 do
+  plugin :plugin_a, git: {url: "/git-server-repos/plugin_a.git"}
 end
