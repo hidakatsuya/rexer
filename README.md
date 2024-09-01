@@ -117,19 +117,21 @@ Loads `.extensions.lock` and updates the currently installed extensions to the l
 You can define an environment and extensions for each environment using the `env ... do - end` block.
 
 ```ruby
-theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair" }
 plugin :redmine_issues_panel, git: { url: "https://github.com/redmica/redmine_issues_panel" }
 
 env :stable do
-  theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair", branch: "support-propshaft" }
   plugin :redmine_issues_panel, git: { url: "https://github.com/redmica/redmine_issues_panel", tag: "v1.0.2" }
+end
+
+env :default, :stable do
+  theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair", branch: "support-propshaft" }
 end
 ```
 
 Definitions other than `env ... do - end` are implicitly defined as `env :default do - end`. Therefore, the above is resolved as follows:
 
 * default env
-  * bleuclair (master)
+  * bleuclair (support-propshaft)
   * redmine_issues_panel (master)
 * stable env
   * bleuclair (support-propshaft)
