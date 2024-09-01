@@ -44,7 +44,7 @@ module IntegrationHelper
   def docker_build
     image_exists = run_with_capture("docker inspect #{image_name}", raise_on_error: true).success?
 
-    system "rake rexer:test:build_integration_test_image", exception: true unless image_exists
+    system "rake test:prepare_integration", exception: true unless image_exists
   end
 
   def docker_launch
