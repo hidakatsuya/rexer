@@ -6,9 +6,7 @@ module Rexer
       end
 
       def call
-        defined_envs.each do
-          puts _1
-        end
+        puts(*defined_envs)
       end
 
       private
@@ -17,7 +15,7 @@ module Rexer
 
       def defined_envs
         all_envs = definition.plugins.map(&:env) + definition.themes.map(&:env)
-        all_envs.uniq
+        all_envs.uniq.sort
       end
     end
   end
