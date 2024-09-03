@@ -39,14 +39,14 @@ module Rexer
           return unless needs_db_migration?
 
           envs = {"NAME" => name.to_s}.merge(extra_envs)
-          cmds = cmd("bundle", "exec", "rake", Rexer.verbosity.debug? ? nil : "-q", "redmine:plugins:migrate")
+          cmds = build_cmd("bundle", "exec", "rake", Rexer.verbosity.debug? ? nil : "-q", "redmine:plugins:migrate", envs:)
 
-          broadcast(:processing, "Execute #{cmds} with #{envs}")
+          broadcast(:processing, "Execute #{cmds}")
 
           if Rexer.verbosity.debug?
-            system(envs, cmds, exception: true)
+            system(cmds, exception: true)
           else
-            _, error, status = Open3.capture3(envs, cmds)
+            _, error, status = Open3.capture3(cmds)
             raise error unless status.success?
           end
         end
@@ -55,8 +55,9 @@ module Rexer
           @source ||= Source.from_definition(definition.source)
         end
 
-        def cmd(*command)
-          [Rexer.config.command_prefix, *command].compact.join(" ")
+        def build_cmd(*command, envs: {})
+          envs_str = envs.map { [_1, _2].join("=") }
+          [Rexer.config.command_prefix, *command, *envs_str].compact.join(" ")
         end
       end
 
@@ -86,7 +87,7 @@ module Rexer
         def run_bundle_install
           return unless plugin_dir.join("Gemfile").exist?
 
-          cmds = cmd("bundle", "install", Rexer.verbosity.debug? ? nil : "--quiet")
+          cmds = build_cmd("bundle", "install", Rexer.verbosity.debug? ? nil : "--quiet")
 
           broadcast(:processing, "Execute #{cmds}")
 
