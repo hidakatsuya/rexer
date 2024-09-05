@@ -6,16 +6,15 @@ module Rexer
       end
 
       def call
-        envs = defined_envs
-        envs.each.with_index do |env_name, i|
-          puts env_name
+        defined_envs = definition.envs
+        defined_envs.each.with_index do |env, i|
+          puts env
 
-          definition = definition_on(env_name)
-          definition.then { _1.themes + _1.plugins }.each do
+          definition_with(env).then { _1.themes + _1.plugins }.each do
             puts "  #{_1.name} (#{Source.from_definition(_1.source).info})"
           end
 
-          puts if i < envs.size - 1
+          puts if i < defined_envs.size - 1
         end
       end
 
@@ -23,15 +22,11 @@ module Rexer
 
       attr_reader :definition
 
-      def defined_envs
-        all_envs = definition.plugins.map(&:env) + definition.themes.map(&:env)
-        all_envs.uniq.sort
-      end
-
-      def definition_on(env)
-        Definition.load_data.tap { |data|
-          data.env = env
-        }
+      def definition_with(env)
+        definition.with(
+          plugins: definition.plugins.select { _1.env == env },
+          themes: definition.themes.select { _1.env == env }
+        )
       end
     end
   end

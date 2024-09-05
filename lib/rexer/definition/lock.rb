@@ -23,17 +23,20 @@ module Rexer
 
       class Dsl < Definition::Dsl
         def lock(env:, version:)
-          lock_state.update(env:, version:)
+          @lock_env = env
+          @lock_version = version
         end
 
         def to_data
-          Definition::Data.new(@plugins, @themes, **lock_state)
+          plugins = lock_by_env(@plugins)
+          themes = lock_by_env(@themes)
+          Definition::Data.new(plugins, themes, @lock_env, @lock_version)
         end
 
         private
 
-        def lock_state
-          @lock_state ||= {}
+        def lock_by_env(plugins_or_themes)
+          plugins_or_themes.select { _1.env == @lock_env }
         end
       end
     end

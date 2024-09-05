@@ -1,10 +1,17 @@
 module Rexer
   module Definition
     class Dsl
-      def initialize(env = :default)
+      def initialize
         @plugins = []
         @themes = []
-        @env = env
+        @env = :default
+      end
+
+      class EnvDsl < self
+        def initialize(env)
+          super()
+          @env = env
+        end
       end
 
       def plugin(name, **opts, &hooks)
@@ -27,7 +34,7 @@ module Rexer
 
       def env(*env_names, &dsl)
         env_names.each do |env_name|
-          data = self.class.new(env_name).tap { _1.instance_eval(&dsl) }.to_data
+          data = EnvDsl.new(env_name).tap { _1.instance_eval(&dsl) }.to_data
 
           @plugins += data.plugins
           @themes += data.themes

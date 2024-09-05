@@ -37,9 +37,12 @@ module Rexer
       end
 
       def load_definition(env)
-        Definition.load_data.tap { |data|
-          data.env = env
-        }
+        data = Definition.load_data
+        data.with(
+          plugins: data.plugins.select { _1.env == env },
+          themes: data.themes.select { _1.env == env },
+          env:
+        )
       end
 
       def load_lock_definition
