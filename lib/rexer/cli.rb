@@ -39,7 +39,7 @@ module Rexer
       Commands::State.new.call
     end
 
-    desc "envs", "Show the list of defined environments in .extensions.rb"
+    desc "envs", "Show the list of environments and their extensions defined in .extensions.rb"
     def envs
       Commands::Envs.new.call
     end

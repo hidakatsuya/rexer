@@ -80,13 +80,13 @@ This command uninstalls the extensions and deletes the `.extensions.lock`.
 ```
 $ rex
 Commands:
-  rex envs            # Show the list of defined environments in .extensions.rb
+  rex envs            # Show the list of environments and their extensions defined in .extensions.rb
   rex help [COMMAND]  # Describe available commands or one specific command
   rex init            # Create a new .extensions.rb file
   rex install [ENV]   # Install the definitions in .extensions.rb for the specified environment
   rex state           # Show the current state of the installed extensions
-  rex switch [ENV]    # Uninstall extensions for the currently installed environment and install ext...
-  rex uninstall       # Uninstall extensions for the currently installed environment based on the st...
+  rex switch [ENV]    # Uninstall extensions for the currently installed environment and install extensions for the specified environment
+  rex uninstall       # Uninstall extensions for the currently installed environment based on the state in .extensions.lock and remove the lock file
   rex update          # Update extensions for the currently installed environment to the latest version
   rex version         # Show Rexer version
 
@@ -166,7 +166,12 @@ In addition, you can define as many environments as you like, and list the defin
 ```
 $ rex envs
 default
+  bleuclair (support-propshaft)
+  redmine_issues_panel (master)
+
 stable
+  bleuclair (support-propshaft)
+  redmine_issues_panel (v1.0.2)
 ```
 
 ### Defining hooks
