@@ -1,6 +1,7 @@
 require "test_helper"
 require "open3"
 require "rake"
+require "paint"
 require "securerandom"
 
 ENV["RUBY_VERSION"] ||= "3.3"

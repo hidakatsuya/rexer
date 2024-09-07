@@ -1,3 +1,5 @@
+require "paint"
+
 module Rexer
   module Commands
     class Init
