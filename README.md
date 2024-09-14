@@ -204,6 +204,25 @@ In the above case, the `bin/rails redmine:plugins:migrate` command is executed a
 
 ## Developing
 
+### Running the command
+
+You can run the command in your local environment without installing the gem as follows.
+
+Setting up the development environment.
+
+```
+$ git clone <this repository>
+$ cd rexer
+$ bundle install
+```
+
+Running the command.
+
+```
+$ cd /path/to/your-local-redmine-source
+$ /your-local-rexer-source/bin/dev state
+```
+
 ### Running tests
 
 First, you need to build the docker image for the integration tests.
@@ -231,6 +250,36 @@ This project uses [Standard](https://github.com/standardrb/standard) for code fo
 ```
 rake standard
 rake standard:fix
+```
+
+### Profiling
+
+Print the call-stack profile.
+
+```
+$ PROFILE=s /your-local-rexer-source/bin/dev state
+...
+
+== Profile ==
+==================================
+  Mode: wall(1000)
+  Samples: 298 (1.97% miss rate)
+  GC: 36 (12.08%)
+==================================
+     TOTAL    (pct)     SAMPLES    (pct)     FRAME
+       261  (87.6%)         147  (49.3%)     Kernel#require
+       ...
+```
+
+Print the benchmark.
+
+```
+$ PROFILE=b /your-local-rexer-source/bin/dev state
+...
+
+== Benchmark ==
+      user     system      total        real
+  0.253115   0.030599   0.283714 (  0.283681)
 ```
 
 ## Contributing
