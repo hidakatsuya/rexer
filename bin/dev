@@ -15,7 +15,7 @@ def with_profiling(profile = false)
 
     puts
     puts "== Profile =="
-    StackProf::Report.new(profile).print_text(false, 30)
+    StackProf::Report.new(profile).print_text
 
   # PROFILE=b dev state
   when "b", "bench"
