@@ -2,4 +2,39 @@
 
 require_relative "../lib/rexer"
 
-Rexer::Cli.start(ARGV)
+def with_profiling(profile = false)
+  case ENV["PROFILE"]
+
+  # PROFILE=s dev state
+  when "s", "stack"
+    require "stackprof"
+
+    profile = StackProf.run(mode: :wall, interval: 1000) do
+      yield
+    end
+
+    puts
+    puts "== Profile =="
+    StackProf::Report.new(profile).print_text(false, 30)
+
+  # PROFILE=b dev state
+  when "b", "bench"
+    require "benchmark"
+
+    bench = Benchmark.measure do
+      yield
+    end
+
+    puts
+    puts "== Benchmark =="
+    puts Benchmark::CAPTION
+    puts bench
+
+  else
+    yield
+  end
+end
+
+with_profiling(ENV["PROFILE"]) do
+  Rexer::Cli.start(ARGV)
+end
