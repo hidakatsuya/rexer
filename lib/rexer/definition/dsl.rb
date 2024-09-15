@@ -63,7 +63,7 @@ module Rexer
       end
 
       def build_source(opts)
-        type = opts.keys.find { Rexer::Source.const_defined?(_1.capitalize) }
+        type = opts.keys.find { Rexer::Source.names.include?(_1) }
         Source.new(type, opts[type]) if type
       end
     end
