@@ -276,8 +276,8 @@ class IntegrationTest < Test::Unit::TestCase
 
     docker_exec("rex reinstall plugin_a").then do |result|
       assert_true result.success?
-      asert_includes result.output_str, "Uninstall plugin_a"
-      asert_includes result.output_str, "Install plugin_a"
+      assert_includes result.output_str, "Uninstall plugin_a"
+      assert_includes result.output_str, "Install plugin_a"
     end
 
     docker_exec("rex state").then do |result|

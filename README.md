@@ -16,8 +16,6 @@ Rexer is a command-line tool for managing Redmine Extension (Plugin and Theme).
 
 It is mainly aimed at helping with the development of Redmine and its plugins, allowing you to define extensions in a Ruby DSL and install, uninstall, update, and switch between different sets of the extensions.
 
-[![demo](docs/demo-v0.8.0.gif)](https://asciinema.org/a/672754)
-
 ## What is Redmine Extension?
 
 Redmine [Plugin](https://www.redmine.org/projects/redmine/wiki/Plugins) and [Theme](https://www.redmine.org/projects/redmine/wiki/Themes) are called Redmine Extension in this tool.
@@ -80,15 +78,16 @@ This command uninstalls the extensions and deletes the `.extensions.lock`.
 ```
 $ rex
 Commands:
-  rex envs            # Show the list of environments and their extensions defined in .extensions.rb
-  rex help [COMMAND]  # Describe available commands or one specific command
-  rex init            # Create a new .extensions.rb file
-  rex install [ENV]   # Install the definitions in .extensions.rb for the specified environment
-  rex state           # Show the current state of the installed extensions
-  rex switch [ENV]    # Uninstall extensions for the currently installed environment and install extensions for the specified environment
-  rex uninstall       # Uninstall extensions for the currently installed environment based on the state in .extensions.lock and remove the lock file
-  rex update          # Update extensions for the currently installed environment to the latest version
-  rex version         # Show Rexer version
+  rex envs                         # Show the list of environments and their extensions defined in .extensions.rb
+  rex help [COMMAND]               # Describe available commands or one specific command
+  rex init                         # Create a new .extensions.rb file
+  rex install [ENV]                # Install the definitions in .extensions.rb for the specified environment
+  rex reinstall [PLUGIN or THEME]  # Uninstall extensions for the currently installed environment and install them again
+  rex state                        # Show the current state of the installed extensions
+  rex switch [ENV]                 # Uninstall extensions for the currently installed environment and install extensions for the specified environment
+  rex uninstall                    # Uninstall extensions for the currently installed environment based on the state in .extensions.lock and remove the lock file
+  rex update                       # Update extensions for the currently installed environment to the latest version
+  rex version                      # Show Rexer version
 
 Options:
   -v, [--verbose], [--no-verbose], [--skip-verbose]  # Detailed output
