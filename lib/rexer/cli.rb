@@ -24,6 +24,11 @@ module Rexer
       Commands::Uninstall.new.call
     end
 
+    desc "reinstall [PLUGIN or THEME]", "Uninstall extensions for the currently installed environment and install them again"
+    def reinstall(extension_name)
+      Commands::Reinstall.new.call(extension_name)
+    end
+
     desc "switch [ENV]", "Uninstall extensions for the currently installed environment and install extensions for the specified environment"
     def switch(env = "default")
       Commands::Switch.new.call(env&.to_sym)
