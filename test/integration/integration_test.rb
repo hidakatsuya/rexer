@@ -258,4 +258,39 @@ class IntegrationTest < Test::Unit::TestCase
       assert_includes result.output_str, "Define themes and plugins you want to use in your Redmine here"
     end
   end
+
+  test "rex reinstall" do
+    docker_exec("rex reinstall plugin_a").then do |result|
+      assert_true result.success?
+      assert_equal "No lock file found", result.output_str
+    end
+
+    docker_exec("rex install env2").then do |result|
+      assert_true result.success?
+    end
+
+    docker_exec("rex reinstall plugin_x").then do |result|
+      assert_true result.success?
+      assert_equal "plugin_x is not installed", result.output_str
+    end
+
+    docker_exec("rex reinstall plugin_a").then do |result|
+      assert_true result.success?
+      asert_includes result.output_str, "Uninstall plugin_a"
+      asert_includes result.output_str, "Install plugin_a"
+    end
+
+    docker_exec("rex state").then do |result|
+      assert_equal [
+        "Rexer: #{Rexer::VERSION}",
+        "Env: env2",
+        "",
+        "Themes:",
+        " * theme_a (master)",
+        "",
+        "Plugins:",
+        " * plugin_a (master)"
+      ], result.output
+    end
+  end
 end
