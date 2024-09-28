@@ -109,6 +109,20 @@ If the specified ENV is currently installed, it compares the current `.extension
 
 Loads `.extensions.lock` and updates the currently installed extensions to the latest version. `.extensions.rb` is NOT referenced in this command.
 
+### Short commands available
+
+The command to execute is determined by a forward match, so you can use like the following short commands.
+
+```
+rex ins # means install
+rex st  # maens state
+rex sw  # means switch
+rex e   # means envs
+rex v   # means version
+
+and more...
+```
+
 ## Advanced Usage
 
 ### Defining for each environment and extension
