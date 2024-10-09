@@ -16,8 +16,19 @@ module Rexer
 
         attr_reader :name, :hooks, :definition
 
+        def theme_root_dir
+          public_themes = Pathname.pwd.join("public", "themes")
+
+          if public_themes.exist?
+            # When Redmine version is v5.1 or older, public/themes is used.
+            public_themes
+          else
+            Pathname.new("themes")
+          end
+        end
+
         def theme_dir
-          @theme_dir ||= Theme.dir.join(name.to_s)
+          @theme_dir ||= theme_root_dir.join(name.to_s)
         end
 
         def theme_exists?
