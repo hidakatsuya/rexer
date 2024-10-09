@@ -3,7 +3,7 @@ require "wisper"
 module Rexer
   module Extension
     module Theme
-      class Base
+      class Action
         include Wisper::Publisher
 
         def initialize(definition)

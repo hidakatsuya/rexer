@@ -1,7 +1,7 @@
 module Rexer
   module Extension
     module Theme
-      class ReloadSource < Base
+      class ReloadSource < Action
         def call
           return unless theme_exists?
 

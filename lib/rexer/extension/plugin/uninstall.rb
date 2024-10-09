@@ -1,7 +1,7 @@
 module Rexer
   module Extension
     module Plugin
-      class Uninstall < Base
+      class Uninstall < Action
         def call
           broadcast(:started, "Uninstall #{name}")
 

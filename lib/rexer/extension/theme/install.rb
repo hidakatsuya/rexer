@@ -1,7 +1,7 @@
 module Rexer
   module Extension
     module Theme
-      class Install < Base
+      class Install < Action
         def call
           broadcast(:started, "Install #{name}")
 

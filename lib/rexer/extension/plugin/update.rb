@@ -1,7 +1,7 @@
 module Rexer
   module Extension
     module Plugin
-      class Update < Base
+      class Update < Action
         def call
           return unless plugin_exists?
 
