@@ -1,7 +1,7 @@
 module Rexer
   module Extension
     module Theme
-      class Update < Base
+      class Update < Action
         def call
           return unless theme_exists?
 

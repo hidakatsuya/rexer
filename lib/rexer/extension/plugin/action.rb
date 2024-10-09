@@ -4,7 +4,7 @@ require "wisper"
 module Rexer
   module Extension
     module Plugin
-      class Base
+      class Action
         include Wisper::Publisher
 
         def initialize(definition)
@@ -17,8 +17,12 @@ module Rexer
 
         attr_reader :name, :hooks, :definition
 
+        def plugin_root_dir
+          Pathname.new("plugins")
+        end
+
         def plugin_dir
-          @plugin_dir ||= Plugin.dir.join(name.to_s)
+          @plugin_dir ||= plugin_root_dir.join(name.to_s)
         end
 
         def plugin_exists?

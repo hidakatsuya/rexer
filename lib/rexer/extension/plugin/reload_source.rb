@@ -1,7 +1,7 @@
 module Rexer
   module Extension
     module Plugin
-      class ReloadSource < Base
+      class ReloadSource < Action
         def call
           return unless plugin_exists?
 
