@@ -123,6 +123,85 @@ rex v   # means version
 and more...
 ```
 
+## Syntax of .extensions.rb file
+
+### Plugin
+
+```ruby
+plugin :plugin_name, <source>: { ... }
+```
+
+### Theme
+
+```ruby
+theme :theme_name, <source>: { ... }
+```
+
+### Source
+
+#### Git
+
+```ruby
+plugin :redmine_issues_panel, git: { url: "https://github.com/redmica/redmine_issues_panel" }
+```
+```ruby
+# Specify the branch
+plugin :redmine_issues_panel, git: { url: "https://github.com/redmica/redmine_issues_panel", branch: "main" }
+# Specify the tag
+plugin :redmine_issues_panel, git: { url: "https://github.com/redmica/redmine_issues_panel", tag: "v1.0.0" }
+# Specify the commit
+plugin :redmine_issues_panel, git: { url: "https://github.com/redmica/redmine_issues_panel", ref: "5cfb8ccbabb2fad2c8f2273a4dda3f16ef2de124" }
+```
+
+#### GitHub
+
+```ruby
+plugin :redmine_issues_panel, github: { repo: "redmica/redmine_issues_panel", tag: "v1.0.0" }
+```
+
+### Env
+
+```ruby
+plugin :redmine_issues_panel, github: { repo: "redmica/redmine_issues_panel" }
+
+# This is the same as the above.
+env :default do
+  plugin :redmine_issues_panel, github: { repo: "redmica/redmine_issues_panel" }
+end
+
+env :stable do
+  plugin :redmine_issues_panel, github: { repo: "redmica/redmine_issues_panel", tag: "v1.0.2" }
+end
+
+env :default, :stable do
+  theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair" }
+end
+```
+
+### Hooks
+
+```ruby
+plugin :redmine_issues_panel, github: { repo: "redmica/redmine_issues_panel" } do
+  installed do
+    puts "The plugin has been installed."
+  end
+
+  uninstalled do
+    puts "The plugin has been uninstalled."
+  end
+end
+
+theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair" } do
+  installed do
+    puts "The theme has been installed."
+  end
+
+  uninstalled do
+    puts "The theme has been uninstalled."
+  end
+end
+```
+
 ## Advanced Usage
 
 ### Defining for each environment and extension
