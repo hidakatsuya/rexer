@@ -28,7 +28,7 @@ gem install rexer
 
 ## Supported Redmine
 
-Rexer is tested with Redmine v5.1 and trunk.
+Rexer is tested with Redmine v6.0 and trunk.
 
 ## Usage
 
