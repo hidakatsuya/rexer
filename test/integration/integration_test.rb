@@ -29,22 +29,22 @@ class IntegrationTest < Test::Unit::TestCase
       assert_true result.success?
       assert_equal [
         "default",
-        "  theme_a (master)",
-        "  plugin_a (HEAD)",
+        "  theme_a (/git-server-repos/theme_a.git@main)",
+        "  plugin_a (/git-server-repos/plugin_a.git@HEAD)",
         "",
         "env1",
-        "  plugin_a (v0.1.0)",
+        "  plugin_a (/git-server-repos/plugin_a.git@v0.1.0)",
         "",
         "env2",
-        "  theme_a (master)",
-        "  plugin_a (master)",
+        "  theme_a (/git-server-repos/theme_a.git@master)",
+        "  plugin_a (/git-server-repos/plugin_a.git@master)",
         "",
         "env3",
-        "  theme_a (master)",
-        "  plugin_a (stable)",
+        "  theme_a (/git-server-repos/theme_a.git@main)",
+        "  plugin_a (/git-server-repos/plugin_a.git@stable)",
         "",
         "env4",
-        "  plugin_a (HEAD)"
+        "  plugin_a (/git-server-repos/plugin_a.git@HEAD)"
       ], result.output
     end
 
@@ -55,10 +55,10 @@ class IntegrationTest < Test::Unit::TestCase
         "Env: default",
         "",
         "Themes:",
-        " * theme_a (master)",
+        " * theme_a (/git-server-repos/theme_a.git@main)",
         "",
         "Plugins:",
-        " * plugin_a (HEAD)"
+        " * plugin_a (/git-server-repos/plugin_a.git@HEAD)"
       ], result.output
     end
 
@@ -114,7 +114,7 @@ class IntegrationTest < Test::Unit::TestCase
         "Env: env1",
         "",
         "Plugins:",
-        " * plugin_a (v0.1.0)"
+        " * plugin_a (/git-server-repos/plugin_a.git@v0.1.0)"
       ], result.output
     end
 
@@ -125,10 +125,10 @@ class IntegrationTest < Test::Unit::TestCase
         "Env: env2",
         "",
         "Themes:",
-        " * theme_a (master)",
+        " * theme_a (/git-server-repos/theme_a.git@master)",
         "",
         "Plugins:",
-        " * plugin_a (master)"
+        " * plugin_a (/git-server-repos/plugin_a.git@master)"
       ], result.output
     end
 
@@ -139,7 +139,7 @@ class IntegrationTest < Test::Unit::TestCase
         "Env: env4",
         "",
         "Plugins:",
-        " * plugin_a (HEAD)"
+        " * plugin_a (/git-server-repos/plugin_a.git@HEAD)"
       ], result.output
     end
   end
@@ -219,7 +219,7 @@ class IntegrationTest < Test::Unit::TestCase
         "Env: default",
         "",
         "Plugins:",
-        " * plugin_a (master)"
+        " * plugin_a (/git-server-repos/plugin_a.git@main)"
       ], result.output
     end
 
@@ -232,8 +232,8 @@ class IntegrationTest < Test::Unit::TestCase
         "Env: default",
         "",
         "Plugins:",
-        " * plugin_a (master)",
-        " * plugin_b (master)"
+        " * plugin_a (/git-server-repos/plugin_a.git@main)",
+        " * plugin_b (/git-server-repos/plugin_b.git@main)"
       ], result.output
     end
 
@@ -246,8 +246,8 @@ class IntegrationTest < Test::Unit::TestCase
         "Env: default",
         "",
         "Plugins:",
-        " * plugin_a (v0.1.0)",
-        " * plugin_b (master)"
+        " * plugin_a (/git-server-repos/plugin_a.git@v0.1.0)",
+        " * plugin_b (/git-server-repos/plugin_b.git@main)"
       ], result.output
     end
 
@@ -260,7 +260,7 @@ class IntegrationTest < Test::Unit::TestCase
         "Env: default",
         "",
         "Plugins:",
-        " * plugin_a (master)"
+        " * plugin_a (/git-server-repos/plugin_a.git@main)"
       ], result.output
     end
   end
@@ -311,10 +311,10 @@ class IntegrationTest < Test::Unit::TestCase
         "Env: env2",
         "",
         "Themes:",
-        " * theme_a (master)",
+        " * theme_a (/git-server-repos/theme_a.git@master)",
         "",
         "Plugins:",
-        " * plugin_a (master)"
+        " * plugin_a (/git-server-repos/plugin_a.git@master)"
       ], result.output
     end
   end
