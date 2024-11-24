@@ -5,9 +5,9 @@ module Rexer
     class Git < Base
       def initialize(url:, branch: nil, tag: nil, ref: nil)
         @url = url
-        @branch = branch
-        @tag = tag
-        @ref = ref
+        @branch = branch.presence
+        @tag = tag.presence
+        @ref = ref.presence
       end
 
       def load(path)
@@ -20,7 +20,7 @@ module Rexer
       end
 
       def updatable?
-        !branch.nil?
+        @branch || [@branch, @tag, @ref].all?(&:nil?)
       end
 
       def info

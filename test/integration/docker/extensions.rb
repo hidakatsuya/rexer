@@ -32,5 +32,5 @@ env :env3 do
 end
 
 env :default, :env4 do
-  plugin :plugin_a, git: {url: "/git-server-repos/plugin_a.git"}
+  plugin :plugin_a, git: {url: "/git-server-repos/plugin_a.git", ref: "HEAD"}
 end

@@ -1,6 +1,7 @@
 require "thor"
 require "dotenv"
 require "erb"
+require "active_support/core_ext/object/blank"
 
 module Rexer
   class Cli < Thor
@@ -34,7 +35,7 @@ module Rexer
       Commands::Switch.new.call(env&.to_sym)
     end
 
-    desc "update", "Update extensions for the currently installed environment to the latest version"
+    desc "update", "Update extensions for the currently installed environment to the latest version if extensions are updateable"
     def update
       Commands::Update.new.call
     end
