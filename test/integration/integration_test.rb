@@ -30,7 +30,7 @@ class IntegrationTest < Test::Unit::TestCase
       assert_equal [
         "default",
         "  theme_a (master)",
-        "  plugin_a (master)",
+        "  plugin_a (HEAD)",
         "",
         "env1",
         "  plugin_a (v0.1.0)",
@@ -44,7 +44,7 @@ class IntegrationTest < Test::Unit::TestCase
         "  plugin_a (stable)",
         "",
         "env4",
-        "  plugin_a (master)"
+        "  plugin_a (HEAD)"
       ], result.output
     end
 
@@ -58,7 +58,7 @@ class IntegrationTest < Test::Unit::TestCase
         " * theme_a (master)",
         "",
         "Plugins:",
-        " * plugin_a (master)"
+        " * plugin_a (HEAD)"
       ], result.output
     end
 
@@ -139,23 +139,23 @@ class IntegrationTest < Test::Unit::TestCase
         "Env: env4",
         "",
         "Plugins:",
-        " * plugin_a (master)"
+        " * plugin_a (HEAD)"
       ], result.output
     end
   end
 
-  test "rex update and hooks" do
+  test "rex update" do
+    # env3 (branch or default branch)
     docker_exec("rex install env3 -q").then do |result|
       assert_true result.success?
-      assert_includes result.output, "plugin_a installed"
-      assert_includes result.output, "theme_a installed"
     end
 
     docker_exec("/update.sh add_readme_to_env3")
 
-    docker_exec("rex update -q").then do |result|
+    docker_exec("rex update").then do |result|
       assert_true result.success?
-      assert_equal "", result.output_str
+      assert_includes result.output_str, "plugin_a ... #{Paint["done", :green]}"
+      assert_includes result.output_str, "theme_a ... #{Paint["done", :green]}"
     end
 
     docker_exec("cat /redmine/plugins/plugin_a/README").then do |result|
@@ -166,19 +166,44 @@ class IntegrationTest < Test::Unit::TestCase
       assert_equal "update", result.output_str
     end
 
-    docker_exec("rex uninstall -q").then do |result|
-      assert_true result.success?
-      assert_includes result.output, "plugin_a uninstalled"
-      assert_includes result.output, "theme_a uninstalled"
-    end
-
-    docker_exec("rex install env1 -q").then do |result|
+    # env1 (tag)
+    docker_exec("rex switch env1 -q").then do |result|
       assert_true result.success?
     end
 
     docker_exec("rex update").then do |result|
       assert_true result.success?
       assert_includes result.output_str, "plugin_a ... #{Paint["skipped (Not updatable)", :yellow]}"
+    end
+
+    # env4 (ref)
+    docker_exec("rex switch env4 -q").then do |result|
+      assert_true result.success?
+    end
+
+    docker_exec("rex update").then do |result|
+      assert_true result.success?
+      assert_includes result.output_str, "plugin_a ... #{Paint["skipped (Not updatable)", :yellow]}"
+    end
+  end
+
+  test "hooks" do
+    docker_exec("rex install env3 -q").then do |result|
+      assert_true result.success?
+      assert_includes result.output, "plugin_a installed"
+      assert_includes result.output, "theme_a installed"
+    end
+
+    docker_exec("rex update -q").then do |result|
+      assert_true result.success?
+      assert_not_includes result.output, "plugin_a updated"
+      assert_not_includes result.output, "theme_a updated"
+    end
+
+    docker_exec("rex uninstall -q").then do |result|
+      assert_true result.success?
+      assert_includes result.output, "plugin_a uninstalled"
+      assert_includes result.output, "theme_a uninstalled"
     end
   end
 

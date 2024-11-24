@@ -27,6 +27,7 @@ module Rexer
   end
 end
 
+require "active_support"
 require "pathname"
 require "zeitwerk"
 
