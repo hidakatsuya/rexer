@@ -28,11 +28,8 @@ jobs:
 
     strategy:
       matrix:
-        include:
-          - ruby_version: "3.3"
-            redmine_branch_name: "master"
-          - ruby_version: "3.2"
-            redmine_branch_name: "5.1-stable"
+        ruby_version: ["3.3"]
+        redmine_branch_name: ["master", "6.0-stable"]
 
     steps:
       - uses: actions/checkout@v4
