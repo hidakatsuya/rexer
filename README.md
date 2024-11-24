@@ -41,9 +41,10 @@ rex init
 This command generates a `.extensions.rb`, so define the extensions you want to install in the file like below.
 
 ```ruby
-theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair", branch: "support-propshaft" }
+theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair", branch: "master" }
 
 plugin :redmine_issues_panel, git: { url: "https://github.com/redmica/redmine_issues_panel", tag: "v1.0.2" }
+plugin :redmica_ui_extension, github: { repo: "redmica/redmica_ui_extension", ref: "4fdc298bc310be2ab295008c0ee522b0ec0e319a" }
 ```
 
 Then, run the following command in the root directory of the Redmine application.
@@ -86,7 +87,7 @@ Commands:
   rex state                        # Show the current state of the installed extensions
   rex switch [ENV]                 # Uninstall extensions for the currently installed environment and install extensions for the specified environment
   rex uninstall                    # Uninstall extensions for the currently installed environment based on the state in .extensions.lock and remove the lock file
-  rex update                       # Update extensions for the currently installed environment to the latest version
+  rex update                       # Update extensions for the currently installed environment to the latest version if extensions are updateable
   rex version                      # Show Rexer version
 
 Options:
@@ -123,7 +124,99 @@ rex v   # means version
 and more...
 ```
 
-## Syntax of .extensions.rb file
+## Advanced Usage
+
+### Defining for each environment and extension
+
+You can define an environment and extensions for each environment using the `env ... do - end` block.
+
+```ruby
+plugin :redmine_issues_panel, github: { repo: "redmica/redmine_issues_panel", branch: "master" }
+
+env :stable do
+  plugin :redmine_issues_panel, github: { repo: "redmica/redmine_issues_panel", tag: "v1.0.2" }
+end
+
+env :default, :stable do
+  theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair" }
+end
+```
+
+Definitions other than `env ... do - end` are implicitly defined as `env :default do - end`. Therefore, the above is resolved as follows:
+
+* default env
+  * bleuclair (farend/redmine_theme_farend_bleuclair@main)
+  * redmine_issues_panel (redmica/redmine_issues_panel@master)
+* stable env
+  * bleuclair (farend/redmine_theme_farend_bleuclair@main)
+  * redmine_issues_panel (redmica/redmine_issues_panel@v1.0.2)
+
+If you want to install extensions for the `default` environment, run the following command.
+
+```
+rex install
+or
+rex install default
+```
+
+Similarly, if you want to install extensions for the `stable` environment, run the following command.
+
+```
+rex install stable
+```
+
+In addition, you can switch between environments.
+
+```
+rex switch stable
+or
+rex install stable
+```
+
+The above command uninstalls the extensions for the currently installed environment and installs the extensions for the `stable` environment.
+
+In addition, you can define as many environments as you like, and list the defined environments with the `rex envs` command.
+
+```
+$ rex envs
+default
+  bleuclair (farend/redmine_theme_farend_bleuclair@main)
+  redmine_issues_panel (redmica/redmine_issues_panel@master)
+
+stable
+  bleuclair (farend/redmine_theme_farend_bleuclair@main)
+  redmine_issues_panel (redmica/redmine_issues_panel@v1.0.2)
+```
+
+### Defining hooks
+
+You can define hooks for each extension.
+
+```ruby
+plugin :redmica_s3, github: { repo: "redmica/redmica_s3" } do
+  installed do
+    Pathname.new("config", "s3.yml").write <<~YAML
+      access_key_id: ...
+    YAML
+  end
+
+  uninstalled do
+    Pathname.new("config", "s3.yml").delete
+  end
+end
+```
+
+### Configuring the command prefix
+
+You can set a prefix for the commands such as `bundle install` that Rexer executes with the `REXER_COMMAND_PREFIX` environment variable.
+
+```
+export REXER_COMMAND_PREFIX="docker compose exec -T app"
+```
+
+In the above case, the `bin/rails redmine:plugins:migrate` command is executed as `docker compose exec -T app bin/rails redmine:plugins:migrate`.
+
+## Extensions.rb Syntax
 
 ### Plugin
 
@@ -201,98 +294,6 @@ theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair" } do
   end
 end
 ```
-
-## Advanced Usage
-
-### Defining for each environment and extension
-
-You can define an environment and extensions for each environment using the `env ... do - end` block.
-
-```ruby
-plugin :redmine_issues_panel, git: { url: "https://github.com/redmica/redmine_issues_panel" }
-
-env :stable do
-  plugin :redmine_issues_panel, git: { url: "https://github.com/redmica/redmine_issues_panel", tag: "v1.0.2" }
-end
-
-env :default, :stable do
-  theme :bleuclair, github: { repo: "farend/redmine_theme_farend_bleuclair", branch: "support-propshaft" }
-end
-```
-
-Definitions other than `env ... do - end` are implicitly defined as `env :default do - end`. Therefore, the above is resolved as follows:
-
-* default env
-  * bleuclair (support-propshaft)
-  * redmine_issues_panel (master)
-* stable env
-  * bleuclair (support-propshaft)
-  * redmine_issues_panel (v1.0.2)
-
-If you want to install extensions for the `default` environment, run the following command.
-
-```
-rex install
-or
-rex install default
-```
-
-Similarly, if you want to install extensions for the `stable` environment, run the following command.
-
-```
-rex install stable
-```
-
-In addition, you can switch between environments.
-
-```
-rex switch stable
-or
-rex install stable
-```
-
-The above command uninstalls the extensions for the currently installed environment and installs the extensions for the `stable` environment.
-
-In addition, you can define as many environments as you like, and list the defined environments with the `rex envs` command.
-
-```
-$ rex envs
-default
-  bleuclair (support-propshaft)
-  redmine_issues_panel (master)
-
-stable
-  bleuclair (support-propshaft)
-  redmine_issues_panel (v1.0.2)
-```
-
-### Defining hooks
-
-You can define hooks for each extension.
-
-```ruby
-plugin :redmica_s3, github: { repo: "redmica/redmica_s3" } do
-  installed do
-    Pathname.new("config", "s3.yml").write <<~YAML
-      access_key_id: ...
-    YAML
-  end
-
-  uninstalled do
-    Pathname.new("config", "s3.yml").delete
-  end
-end
-```
-
-### Configuring the command prefix
-
-You can set a prefix for the commands such as `bundle install` that Rexer executes with the `REXER_COMMAND_PREFIX` environment variable.
-
-```
-export REXER_COMMAND_PREFIX="docker compose exec -T app"
-```
-
-In the above case, the `bin/rails redmine:plugins:migrate` command is executed as `docker compose exec -T app bin/rails redmine:plugins:migrate`.
 
 ## Developing
 
