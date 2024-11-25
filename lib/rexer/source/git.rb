@@ -40,7 +40,7 @@ module Rexer
       end
 
       def reference_name
-        branch || tag || ref || "main"
+        branch || tag || short_ref || "main"
       end
 
       def short_ref
