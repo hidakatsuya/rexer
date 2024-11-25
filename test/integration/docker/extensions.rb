@@ -34,3 +34,10 @@ end
 env :default, :env4 do
   plugin :plugin_a, git: {url: "/git-server-repos/plugin_a.git", ref: "HEAD"}
 end
+
+env :env5 do
+  plugin :plugin_b, git: {
+    url: "/git-server-repos/plugin_b.git",
+    ref: ERB.new("<%= `git -C /git-local-repos/plugin_b rev-parse HEAD`.strip %>").result
+  }
+end

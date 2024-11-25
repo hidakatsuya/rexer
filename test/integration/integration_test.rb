@@ -44,7 +44,10 @@ class IntegrationTest < Test::Unit::TestCase
         "  plugin_a (/git-server-repos/plugin_a.git@stable)",
         "",
         "env4",
-        "  plugin_a (/git-server-repos/plugin_a.git@HEAD)"
+        "  plugin_a (/git-server-repos/plugin_a.git@HEAD)",
+        "",
+        "env5",
+        "  plugin_b (/git-server-repos/plugin_b.git@#{plugin_b_head_sha.slice(0, 7)})"
       ], result.output
     end
 
@@ -317,5 +320,9 @@ class IntegrationTest < Test::Unit::TestCase
         " * plugin_a (/git-server-repos/plugin_a.git@master)"
       ], result.output
     end
+  end
+
+  def plugin_b_head_sha
+    docker_exec("git -C /git-local-repos/plugin_b rev-parse HEAD").output_str.strip
   end
 end
