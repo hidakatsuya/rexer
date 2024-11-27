@@ -3,15 +3,15 @@ module Rexer
     module Theme
       class Install < Action
         def call
-          broadcast(:started, "Install #{name}")
+          broadcast(:started, "Install #{theme.name}")
 
-          if theme_exists?
+          if theme.exist?
             broadcast(:skipped, "Already exists")
             return
           end
 
           load_from_source
-          hooks[:installed]&.call
+          call_installed_hook
 
           broadcast(:completed)
         end
@@ -19,7 +19,11 @@ module Rexer
         private
 
         def load_from_source
-          source.load(theme_dir.to_s)
+          theme.source.load(theme.path.to_s)
+        end
+
+        def call_installed_hook
+          theme.hooks[:installed]&.call
         end
       end
     end

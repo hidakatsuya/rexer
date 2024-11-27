@@ -20,27 +20,25 @@ module Rexer
       attr_reader :lock_definition
 
       def print_plugins
-        plugins = lock_definition.plugins
-        return if plugins.empty?
+        plugin_defs = lock_definition.plugins
+        return if plugin_defs.empty?
 
         puts "\nPlugins:"
-        plugins.each do
-          puts " * #{_1.name} (#{source_info(_1.source)})"
+        plugin_defs.each do
+          plugin = Extension::Entity::Plugin.new(_1)
+          puts " * #{plugin.name} (#{plugin.source_info})"
         end
       end
 
       def print_themes
-        themes = lock_definition.themes
-        return if themes.empty?
+        theme_defs = lock_definition.themes
+        return if theme_defs.empty?
 
         puts "\nThemes:"
-        themes.each do
-          puts " * #{_1.name} (#{source_info(_1.source)})"
+        theme_defs.each do
+          theme = Extension::Entity::Theme.new(_1)
+          puts " * #{theme.name} (#{theme.source_info})"
         end
-      end
-
-      def source_info(definition_source)
-        Source.from_definition(definition_source).info
       end
 
       def no_lock_file_found

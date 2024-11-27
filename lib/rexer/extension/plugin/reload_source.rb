@@ -3,9 +3,9 @@ module Rexer
     module Plugin
       class ReloadSource < Action
         def call
-          return unless plugin_exists?
+          return unless plugin.exist?
 
-          broadcast(:started, "Reload #{name} source")
+          broadcast(:started, "Reload #{plugin.name} source")
 
           reload_source
           run_db_migrate
@@ -16,10 +16,8 @@ module Rexer
         private
 
         def reload_source
-          plugin_dir.to_s.then { |dir|
-            FileUtils.rm_rf(dir)
-            source.load(dir)
-          }
+          plugin.path.rmtree
+          plugin.source.load(plugin.path.to_s)
         end
       end
     end

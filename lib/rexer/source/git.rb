@@ -9,7 +9,6 @@ module Rexer
         @branch = branch
         @tag = tag
         @ref = ref
-        @reference = branch || tag || ref
       end
 
       def load(path)
@@ -25,27 +24,35 @@ module Rexer
         branch || reference.nil?
       end
 
-      def info
-        URI.parse(url).then do |uri|
-          "#{uri.host}#{uri.path}@#{reference_name}"
-        end
+      def info(work_dir = nil)
+        uri = URI.parse(url).then { "#{_1.host}#{_1.path}" }
+        ref = reference(short_ref: true) || current_branch(work_dir)
+
+        [uri, ref].compact.join("@")
       end
 
       private
 
-      attr_reader :url, :reference, :branch, :tag, :ref
+      attr_reader :url, :branch, :tag
 
       def checkout(git)
         reference&.then { git.checkout(_1) }
       end
 
-      def reference_name
-        branch || tag || short_ref || "main"
+      def reference(short_ref: false)
+        branch || tag || ref(short: short_ref)
       end
 
-      def short_ref
-        return unless ref
-        ref.match?(/^[a-z0-9]+$/) ? ref.slice(0, 7) : ref
+      def ref(short: false)
+        return nil unless @ref
+        return @ref unless short
+
+        @ref.match?(/^[a-z0-9]+$/) ? @ref.slice(0, 7) : @ref
+      end
+
+      def current_branch(work_dir)
+        return nil unless work_dir
+        ::Git.open(work_dir).current_branch
       end
     end
   end

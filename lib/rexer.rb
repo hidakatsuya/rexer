@@ -1,12 +1,4 @@
 module Rexer
-  def self.definition_file
-    ".extensions.rb"
-  end
-
-  def self.definition_lock_file
-    ".extensions.lock"
-  end
-
   Config = Data.define(
     # The prefix of the command such as bundle install and bin/rails redmine:plugins:migrate.
     #
@@ -20,6 +12,14 @@ module Rexer
 
   class << self
     attr_accessor :verbosity
+
+    def definition_file
+      ".extensions.rb"
+    end
+
+    def definition_lock_file
+      ".extensions.lock"
+    end
 
     def config
       @config ||= Config.new(command_prefix: ENV["REXER_COMMAND_PREFIX"])

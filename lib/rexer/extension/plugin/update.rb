@@ -3,11 +3,11 @@ module Rexer
     module Plugin
       class Update < Action
         def call
-          return unless plugin_exists?
+          return unless plugin.exist?
 
-          broadcast(:started, "Update #{name}")
+          broadcast(:started, "Update #{plugin.name}")
 
-          unless source.updatable?
+          unless plugin.source.updatable?
             broadcast(:skipped, "Not updatable")
             return
           end
@@ -21,7 +21,7 @@ module Rexer
         private
 
         def update_source
-          source.update(plugin_dir.to_s)
+          plugin.source.update(plugin.path)
         end
       end
     end
