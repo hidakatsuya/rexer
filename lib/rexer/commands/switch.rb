@@ -7,7 +7,7 @@ module Rexer
 
       def call(env)
         return if no_lock_file_found
-        return if already_on(env)
+        return if already_in(env)
 
         Uninstall.new.call
         Install.new.call(env)
@@ -23,9 +23,9 @@ module Rexer
         }
       end
 
-      def already_on(env)
+      def already_in(env)
         (lock_definition.env == env).tap do |result|
-          puts "Already on #{env} environment" if result
+          puts "Already in #{env} environment" if result
         end
       end
     end
