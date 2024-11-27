@@ -3,9 +3,9 @@ module Rexer
     module Theme
       class Update < Action
         def call
-          return unless theme_exists?
+          return unless theme.exist?
 
-          broadcast(:started, "Update #{name}")
+          broadcast(:started, "Update #{theme.name}")
 
           update_source
 
@@ -15,7 +15,7 @@ module Rexer
         private
 
         def update_source
-          source.update(theme_dir.to_s)
+          theme.source.update(theme.path.to_s)
         end
       end
     end

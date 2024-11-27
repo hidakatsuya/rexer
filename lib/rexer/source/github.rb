@@ -6,8 +6,8 @@ module Rexer
         super(url: "https://github.com/#{repo}", branch: branch, tag: tag, ref: ref)
       end
 
-      def info
-        "#{@repo}@#{reference_name}"
+      def info(work_dir = nil)
+        [@repo, reference(short_ref: true) || current_branch(work_dir)].compact.join("@")
       end
     end
   end

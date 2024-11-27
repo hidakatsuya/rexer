@@ -17,7 +17,7 @@ module Rexer
       end
 
       # Return the status of the source.
-      def info = ""
+      def info(_work_dir = nil) = ""
     end
   end
 end

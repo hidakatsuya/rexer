@@ -9,36 +9,21 @@ module Rexer
 
         def initialize(definition)
           @definition = definition
-          @name = definition.name
-          @hooks = definition.hooks || {}
+          @plugin = Entity::Plugin.new(definition)
         end
 
         private
 
-        attr_reader :name, :hooks, :definition
-
-        def plugin_root_dir
-          Pathname.new("plugins")
-        end
-
-        def plugin_dir
-          @plugin_dir ||= plugin_root_dir.join(name.to_s)
-        end
-
-        def plugin_exists?
-          plugin_dir.exist? && !plugin_dir.empty?
-        end
+        attr_reader :plugin
 
         def needs_db_migration?
-          plugin_dir.join("db", "migrate").then {
-            _1.exist? && !_1.empty?
-          }
+          plugin.contains_db_migrations?
         end
 
         def run_db_migrate(extra_envs = {})
           return unless needs_db_migration?
 
-          envs = {"NAME" => name.to_s}.merge(extra_envs)
+          envs = {"NAME" => plugin.name.to_s}.merge(extra_envs)
           cmds = build_cmd("bundle", "exec", "rake", Rexer.verbosity.debug? ? nil : "-q", "redmine:plugins:migrate", envs:)
 
           broadcast(:processing, "Execute #{cmds}")
@@ -49,10 +34,6 @@ module Rexer
             _, error, status = Open3.capture3(cmds)
             raise error unless status.success?
           end
-        end
-
-        def source
-          @source ||= Source.from_definition(definition.source)
         end
 
         def build_cmd(*command, envs: {})

@@ -3,16 +3,16 @@ module Rexer
     module Plugin
       class Uninstall < Action
         def call
-          broadcast(:started, "Uninstall #{name}")
+          broadcast(:started, "Uninstall #{plugin.name}")
 
-          unless plugin_exists?
+          unless plugin.exist?
             broadcast(:skipped, "Not exists")
             return
           end
 
           reset_db_migration
           remove_plugin
-          hooks[:uninstalled]&.call
+          call_uninstalled_hook
 
           broadcast(:completed)
         end
@@ -24,7 +24,11 @@ module Rexer
         end
 
         def remove_plugin
-          plugin_dir.rmtree
+          plugin.path.rmtree
+        end
+
+        def call_uninstalled_hook
+          plugin.hooks[:uninstalled]&.call
         end
       end
     end

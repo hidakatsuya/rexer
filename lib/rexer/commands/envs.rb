@@ -10,8 +10,12 @@ module Rexer
         defined_envs.each.with_index do |env, i|
           puts env
 
-          definition_with(env).then { _1.themes + _1.plugins }.each do
-            puts "  #{_1.name} (#{Source.from_definition(_1.source).info})"
+          themes_in(env) do
+            print_extension_definition(_1)
+          end
+
+          plugins_in(env) do
+            print_extension_definition(_1)
           end
 
           puts if i < defined_envs.size - 1
@@ -22,11 +26,20 @@ module Rexer
 
       attr_reader :definition
 
-      def definition_with(env)
-        definition.with(
-          plugins: definition.plugins.select { _1.env == env },
-          themes: definition.themes.select { _1.env == env }
-        )
+      def print_extension_definition(extension_def)
+        puts "  #{extension_def.name} (#{Source.from_definition(extension_def.source).info})"
+      end
+
+      def themes_in(env)
+        definition.themes.each do
+          yield _1 if _1.env == env
+        end
+      end
+
+      def plugins_in(env)
+        definition.plugins.each do
+          yield _1 if _1.env == env
+        end
       end
     end
   end

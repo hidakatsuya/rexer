@@ -3,9 +3,9 @@ module Rexer
     module Plugin
       class Install < Action
         def call
-          broadcast(:started, "Install #{name}")
+          broadcast(:started, "Install #{plugin.name}")
 
-          if plugin_exists?
+          if plugin.exist?
             broadcast(:skipped, "Already exists")
             return
           end
@@ -13,7 +13,7 @@ module Rexer
           load_from_source
           run_bundle_install
           run_db_migrate
-          hooks[:installed]&.call
+          call_installed_hook
 
           broadcast(:completed)
         end
@@ -21,17 +21,21 @@ module Rexer
         private
 
         def load_from_source
-          source.load(plugin_dir.to_s)
+          plugin.source.load(plugin.path.to_s)
         end
 
         def run_bundle_install
-          return unless plugin_dir.join("Gemfile").exist?
+          return unless plugin.contains_gemfile?
 
           cmds = build_cmd("bundle", "install", Rexer.verbosity.debug? ? nil : "--quiet")
 
           broadcast(:processing, "Execute #{cmds}")
 
           system(cmds, exception: true)
+        end
+
+        def call_installed_hook
+          plugin.hooks[:installed]&.call
         end
       end
     end
