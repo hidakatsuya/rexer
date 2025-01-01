@@ -79,16 +79,16 @@ This command uninstalls the extensions and deletes the `.extensions.lock`.
 ```
 $ rex
 Commands:
-  rex envs                         # Show the list of environments and their extensions defined in .extensions.rb
-  rex help [COMMAND]               # Describe available commands or one specific command
-  rex init                         # Create a new .extensions.rb file
-  rex install [ENV]                # Install the definitions in .extensions.rb for the specified environment
-  rex reinstall [PLUGIN or THEME]  # Uninstall extensions for the currently installed environment and install them again
-  rex state                        # Show the current state of the installed extensions
-  rex switch [ENV]                 # Uninstall extensions for the currently installed environment and install extensions for the specified environment
-  rex uninstall                    # Uninstall extensions for the currently installed environment based on the state in .extensions.lock and remove the lock file
-  rex update                       # Update extensions for the currently installed environment to the latest version if extensions are updateable
-  rex version                      # Show Rexer version
+  rex envs                    # Show the list of environments and their extensions defined in .extensions.rb
+  rex help [COMMAND]          # Describe available commands or one specific command
+  rex init                    # Create a new .extensions.rb file
+  rex install [env]           # Install the definitions in .extensions.rb for the specified environment
+  rex reinstall [extension]   # Uninstall extensions for the currently installed environment and install them again
+  rex state                   # Show the current state of the installed extensions
+  rex switch [env]            # Uninstall extensions for the currently installed environment and install extensions for the specified environment
+  rex uninstall               # Uninstall extensions for the currently installed environment based on the state in .extensions.lock and remove the lock file
+  rex update [extensions...]  # Update extensions for the currently installed environment to the latest version if extensions are updateable. If no extensions are specified, all extensions are updated
+  rex version                 # Show Rexer version
 
 Options:
   -v, [--verbose], [--no-verbose], [--skip-verbose]  # Detailed output

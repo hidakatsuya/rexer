@@ -169,6 +169,19 @@ class IntegrationTest < Test::Unit::TestCase
       assert_equal "update", result.output_str
     end
 
+    # rex update [extensions...]
+    docker_exec("rex update plugin_a theme_a").then do |result|
+      assert_true result.success?
+      assert_includes result.output_str, "plugin_a ... #{Paint["done", :green]}"
+      assert_includes result.output_str, "theme_a ... #{Paint["done", :green]}"
+    end
+
+    docker_exec("rex update theme_a").then do |result|
+      assert_true result.success?
+      assert_includes result.output_str, "theme_a ... #{Paint["done", :green]}"
+      assert_not_includes result.output_str, "plugin_a"
+    end
+
     # env1 (tag)
     docker_exec("rex switch env1 -q").then do |result|
       assert_true result.success?
