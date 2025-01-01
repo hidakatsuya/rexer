@@ -15,7 +15,7 @@ module Rexer
       Commands::Init.new.call
     end
 
-    desc "install [ENV]", "Install the definitions in .extensions.rb for the specified environment"
+    desc "install [env]", "Install the definitions in .extensions.rb for the specified environment"
     def install(env = "default")
       Commands::Install.new.call(env&.to_sym)
     end
@@ -25,19 +25,19 @@ module Rexer
       Commands::Uninstall.new.call
     end
 
-    desc "reinstall [PLUGIN or THEME]", "Uninstall extensions for the currently installed environment and install them again"
+    desc "reinstall [extension]", "Uninstall extensions for the currently installed environment and install them again"
     def reinstall(extension_name)
       Commands::Reinstall.new.call(extension_name)
     end
 
-    desc "switch [ENV]", "Uninstall extensions for the currently installed environment and install extensions for the specified environment"
+    desc "switch [env]", "Uninstall extensions for the currently installed environment and install extensions for the specified environment"
     def switch(env = "default")
       Commands::Switch.new.call(env&.to_sym)
     end
 
-    desc "update", "Update extensions for the currently installed environment to the latest version if extensions are updateable"
-    def update
-      Commands::Update.new.call
+    desc "update [extensions...]", "Update extensions for the currently installed environment to the latest version if extensions are updateable. If no extensions are specified, all extensions are updated"
+    def update(*extension_names)
+      Commands::Update.new.call(extension_names)
     end
 
     desc "state", "Show the current state of the installed extensions"
