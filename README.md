@@ -79,6 +79,7 @@ This command uninstalls the extensions and deletes the `.extensions.lock`.
 ```
 $ rex
 Commands:
+  rex edit                    # Edit .extensions.rb
   rex envs                    # Show the list of environments and their extensions defined in .extensions.rb
   rex help [COMMAND]          # Describe available commands or one specific command
   rex init                    # Create a new .extensions.rb file
