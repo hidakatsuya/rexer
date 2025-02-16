@@ -71,13 +71,4 @@ module IntegrationHelper
 
     @container_name = nil
   end
-
-  def legacy_theme_dir?
-    return @legacy_theme_dir if defined?(@legacy_theme_dir)
-    @legacy_theme_dir = docker_exec("test -d /redmine/public/themes").success?
-  end
-
-  def theme_dir
-    legacy_theme_dir? ? "/redmine/public/themes" : "/redmine/themes"
-  end
 end
