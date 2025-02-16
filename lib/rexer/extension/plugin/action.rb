@@ -16,12 +16,8 @@ module Rexer
 
         attr_reader :plugin
 
-        def needs_db_migration?
-          plugin.contains_db_migrations?
-        end
-
         def run_db_migrate(extra_envs = {})
-          return unless needs_db_migration?
+          return unless plugin.contains_db_migrations?
 
           envs = {"NAME" => plugin.name.to_s}.merge(extra_envs)
           cmds = build_cmd("bundle", "exec", "rake", Rexer.verbosity.debug? ? nil : "-q", "redmine:plugins:migrate", envs:)

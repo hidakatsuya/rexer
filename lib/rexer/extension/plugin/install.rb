@@ -35,7 +35,7 @@ module Rexer
         end
 
         def call_installed_hook
-          plugin.hooks[:installed]&.call
+          Rexer.redmine_root_dir { plugin.hooks[:installed]&.call }
         end
       end
     end

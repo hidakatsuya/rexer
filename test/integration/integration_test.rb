@@ -69,7 +69,7 @@ class IntegrationTest < Test::Unit::TestCase
       assert_equal "plugin_a", result.output.last
     end
 
-    docker_exec("ls #{theme_dir}").then do |result|
+    docker_exec("ls themes").then do |result|
       assert_includes result.output.last, "theme_a"
     end
 
@@ -90,9 +90,8 @@ class IntegrationTest < Test::Unit::TestCase
       assert_equal ["README"], result.output
     end
 
-    docker_exec("ls #{theme_dir}").then do |result|
-      expected_files = legacy_theme_dir? ? %w[README alternate classic] : %w[README]
-      assert_equal expected_files, result.output
+    docker_exec("ls themes").then do |result|
+      assert_equal %w[README], result.output
     end
 
     docker_exec(%!bin/rails r "puts ActiveRecord::Base.connection.table_exists?('hellos')"!).then do |result|
@@ -165,7 +164,7 @@ class IntegrationTest < Test::Unit::TestCase
       assert_equal "update", result.output_str
     end
 
-    docker_exec("cat #{theme_dir}/theme_a/README").then do |result|
+    docker_exec("cat themes/theme_a/README").then do |result|
       assert_equal "update", result.output_str
     end
 
@@ -332,6 +331,44 @@ class IntegrationTest < Test::Unit::TestCase
         "Plugins:",
         " * plugin_a (/git-server-repos/plugin_a.git@master)"
       ], result.output
+    end
+  end
+
+  test "in a subdirectory" do
+    docker_exec("cd plugins", "rex envs").then do |result|
+      assert_true result.success?
+      assert_includes result.output_str, "default"
+    end
+
+    docker_exec("cd plugins", "rex state").then do |result|
+      assert_true result.success?
+      assert_equal "No lock file found", result.output_str
+    end
+
+    docker_exec("cd plugins", "rex install -q").then do |result|
+      assert_true result.success?
+      assert_equal [
+        "Rexer: #{Rexer::VERSION}",
+        "Env: default",
+        "",
+        "Themes:",
+        " * theme_a (/git-server-repos/theme_a.git@master)",
+        "",
+        "Plugins:",
+        " * plugin_a (/git-server-repos/plugin_a.git@HEAD)"
+      ], result.output
+    end
+
+    docker_exec("cd plugins", "rex switch env3 -q").then do |result|
+      assert_true result.success?
+      assert_includes result.output, "plugin_a installed"
+      assert_includes result.output, "theme_a installed"
+    end
+
+    docker_exec("cd plugins", "rex uninstall -q").then do |result|
+      assert_true result.success?
+      assert_includes result.output, "plugin_a uninstalled"
+      assert_includes result.output, "theme_a uninstalled"
     end
   end
 

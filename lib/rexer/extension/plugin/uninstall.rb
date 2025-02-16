@@ -28,7 +28,7 @@ module Rexer
         end
 
         def call_uninstalled_hook
-          plugin.hooks[:uninstalled]&.call
+          Rexer.redmine_root_dir { plugin.hooks[:uninstalled]&.call }
         end
       end
     end

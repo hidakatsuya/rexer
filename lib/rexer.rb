@@ -21,6 +21,14 @@ module Rexer
       ".extensions.lock"
     end
 
+    def redmine_root_dir
+      if block_given?
+        Dir.chdir(Definition.dir) { yield }
+      else
+        Definition.dir
+      end
+    end
+
     def config
       @config ||= Config.new(command_prefix: ENV["REXER_COMMAND_PREFIX"])
     end

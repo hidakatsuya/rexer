@@ -2,7 +2,12 @@ module Rexer
   module Commands
     class Init
       def call
-        definition_file = Definition.file
+        unless redmine_root_dir?
+          puts Paint["Please run in the Redmine root directory.", :red]
+          exit 1
+        end
+
+        definition_file = Pathname.new(Rexer.definition_file)
 
         if definition_file.exist?
           puts Paint["#{definition_file.basename} already exists", :red]
@@ -33,6 +38,10 @@ module Rexer
           # For more usage, see https://github.com/hidakatsuya/rexer.
 
         TEMPLATE
+      end
+
+      def redmine_root_dir?
+        Pathname.new("README.rdoc").then { _1.exist? && _1.read.include?("Redmine") }
       end
     end
   end

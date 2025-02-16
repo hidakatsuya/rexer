@@ -62,21 +62,13 @@ module IntegrationHelper
   end
 
   def docker_exec(*command, raise_on_error: false)
-    run_with_capture("docker exec #{container_name} #{command.join(" && ")}", raise_on_error:)
+    command_str = (command.size == 1) ? command.first : %(bash -c "#{command.join(" && ")}")
+    run_with_capture("docker exec #{container_name} #{command_str}", raise_on_error:)
   end
 
   def docker_stop
     run_with_capture("docker container stop -t 0 #{container_name} && docker container rm #{container_name}", raise_on_error: true)
 
     @container_name = nil
-  end
-
-  def legacy_theme_dir?
-    return @legacy_theme_dir if defined?(@legacy_theme_dir)
-    @legacy_theme_dir = docker_exec("test -d /redmine/public/themes").success?
-  end
-
-  def theme_dir
-    legacy_theme_dir? ? "/redmine/public/themes" : "/redmine/themes"
   end
 end
