@@ -372,6 +372,20 @@ class IntegrationTest < Test::Unit::TestCase
     end
   end
 
+  test "edit" do
+    docker_exec("rex edit").then do |result|
+      assert_false result.success?
+      assert_equal Paint["Please set your $VISUAL or $EDITOR environment variable.", :red], result.output_str
+    end
+
+    docker_exec("rm .extensions.rb", raise_on_error: true)
+
+    docker_exec("rex edit").then do |result|
+      assert_false result.success?
+      assert_includes result.output_str, "No definition file"
+    end
+  end
+
   def plugin_b_head_sha
     docker_exec("git -C /git-local-repos/plugin_b rev-parse HEAD").output_str.strip
   end

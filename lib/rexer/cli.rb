@@ -50,6 +50,11 @@ module Rexer
       Commands::Envs.new.call
     end
 
+    desc "edit", "Edit .extensions.rb"
+    def edit
+      Commands::Edit.new.call
+    end
+
     desc "version", "Show Rexer version"
     def version
       puts Rexer::VERSION
