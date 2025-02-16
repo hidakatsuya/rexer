@@ -62,7 +62,8 @@ module IntegrationHelper
   end
 
   def docker_exec(*command, raise_on_error: false)
-    run_with_capture("docker exec #{container_name} #{command.join(" && ")}", raise_on_error:)
+    command_str = (command.size == 1) ? command.first : %(bash -c "#{command.join(" && ")}")
+    run_with_capture("docker exec #{container_name} #{command_str}", raise_on_error:)
   end
 
   def docker_stop

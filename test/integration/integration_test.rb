@@ -335,6 +335,44 @@ class IntegrationTest < Test::Unit::TestCase
     end
   end
 
+  test "in a subdirectory" do
+    docker_exec("cd plugins", "rex envs").then do |result|
+      assert_true result.success?
+      assert_includes result.output_str, "default"
+    end
+
+    docker_exec("cd plugins", "rex state").then do |result|
+      assert_true result.success?
+      assert_equal "No lock file found", result.output_str
+    end
+
+    docker_exec("cd plugins", "rex install -q").then do |result|
+      assert_true result.success?
+      assert_equal [
+        "Rexer: #{Rexer::VERSION}",
+        "Env: default",
+        "",
+        "Themes:",
+        " * theme_a (/git-server-repos/theme_a.git@master)",
+        "",
+        "Plugins:",
+        " * plugin_a (/git-server-repos/plugin_a.git@HEAD)"
+      ], result.output
+    end
+
+    docker_exec("cd plugins", "rex switch env3 -q").then do |result|
+      assert_true result.success?
+      assert_includes result.output, "plugin_a installed"
+      assert_includes result.output, "theme_a installed"
+    end
+
+    docker_exec("cd plugins", "rex uninstall -q").then do |result|
+      assert_true result.success?
+      assert_includes result.output, "plugin_a uninstalled"
+      assert_includes result.output, "theme_a uninstalled"
+    end
+  end
+
   def plugin_b_head_sha
     docker_exec("git -C /git-local-repos/plugin_b rev-parse HEAD").output_str.strip
   end

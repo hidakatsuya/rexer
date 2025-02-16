@@ -23,7 +23,7 @@ module Rexer
         end
 
         def call_uninstalled_hook
-          theme.hooks[:uninstalled]&.call
+          Rexer.redmine_root_dir { theme.hooks[:uninstalled]&.call }
         end
       end
     end

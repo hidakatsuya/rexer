@@ -1,11 +1,7 @@
-require "active_support/core_ext/class/attribute"
-
 module Rexer
   module Extension
     module Entity
       class Base
-        class_attribute :root_dir
-
         def initialize(definition)
           @definition = definition
           @hooks = definition.hooks || {}
@@ -13,6 +9,8 @@ module Rexer
         end
 
         attr_reader :hooks, :name
+
+        def root_dir = raise "Not implemented"
 
         def exist?
           path.exist? && !path.empty?
@@ -36,7 +34,9 @@ module Rexer
       end
 
       class Plugin < Base
-        self.root_dir = Pathname.new("plugins")
+        def root_dir
+          @root_dir ||= Rexer.redmine_root_dir.join("plugins")
+        end
 
         def contains_db_migrations?
           path.join("db", "migrate").then { _1.exist? && !_1.empty? }
@@ -48,7 +48,9 @@ module Rexer
       end
 
       class Theme < Base
-        self.root_dir = Pathname.new("themes")
+        def root_dir
+          @root_dir ||= Rexer.redmine_root_dir.join("themes")
+        end
       end
     end
   end

@@ -2,7 +2,7 @@ module Rexer
   module Definition
     module Lock
       def self.file
-        @file ||= Pathname.new(Rexer.definition_lock_file)
+        @file ||= Definition.dir.join(Rexer.definition_lock_file)
       end
 
       def self.load_data
@@ -10,6 +10,8 @@ module Rexer
 
         dsl = Dsl.new.tap { _1.instance_eval(file.read) }
         dsl.to_data
+      rescue DefinitionFileNotFound
+        nil
       end
 
       def self.create_file(env)
