@@ -386,6 +386,15 @@ class IntegrationTest < Test::Unit::TestCase
     end
   end
 
+  test "default command" do
+    docker_exec("rex").then do |result|
+      assert_true result.success?
+      assert_includes result.output_str, "Install theme_a ..."
+      assert_includes result.output_str, "Install plugin_a ..."
+      assert_includes result.output_str, "Rexer: #{Rexer::VERSION}"
+    end
+  end
+
   def plugin_b_head_sha
     docker_exec("git -C /git-local-repos/plugin_b rev-parse HEAD").output_str.strip
   end
