@@ -107,6 +107,9 @@ If the specified ENV is currently installed, it compares the current `.extension
 * Uninstalls deleted extensions (the `uninstalled` hook is executed).
 * Reload extensions whose source settings has changed (for example, the `branch` or `tag` has changed) and runs the database migration if necessary.
 
+> [!TIP]
+> Execute the install command when running the rex command without a subcommand.
+
 ### rex update [extensions...]
 
 Loads `.extensions.lock` and updates the currently installed extensions to the latest version. `.extensions.rb` is NOT referenced in this command.
