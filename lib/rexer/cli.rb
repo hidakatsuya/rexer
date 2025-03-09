@@ -5,6 +5,8 @@ require "active_support/core_ext/object/blank"
 
 module Rexer
   class Cli < Thor
+    default_command :install
+
     def self.exit_on_failure? = true
 
     class_option :verbose, type: :boolean, aliases: "-v", desc: "Detailed output"
