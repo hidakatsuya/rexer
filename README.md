@@ -12,13 +12,13 @@
   </a>
 </p>
 
-Rexer is a command-line tool for managing Redmine Extension (Plugin and Theme).
+Rexer is a command-line tool for managing Redmine Extensions (Plugins and Themes).
 
 It is mainly aimed at helping with the development of Redmine and its plugins, allowing you to define extensions in a Ruby DSL and install, uninstall, update, and switch between different sets of the extensions.
 
 ## What is Redmine Extension?
 
-Redmine [Plugin](https://www.redmine.org/projects/redmine/wiki/Plugins) and [Theme](https://www.redmine.org/projects/redmine/wiki/Themes) are called Redmine Extension in this tool.
+Redmine [Plugins](https://www.redmine.org/projects/redmine/wiki/Plugins) and [Themes](https://www.redmine.org/projects/redmine/wiki/Themes) are called Redmine Extensions in this tool.
 
 ## Installation
 
@@ -220,7 +220,7 @@ export REXER_COMMAND_PREFIX="docker compose exec -T app"
 
 In the above case, the `bin/rails redmine:plugins:migrate` command is executed as `docker compose exec -T app bin/rails redmine:plugins:migrate`.
 
-## Extensions.rb Syntax
+## Syntax for extensions.rb
 
 ### Plugin
 
