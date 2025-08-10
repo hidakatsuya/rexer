@@ -1,3 +1,6 @@
+> [!Note]
+> This project is no longer maintained. Please use the Rust implementation, [rexer-rs](https://github.com/hidakatsuya/rexer-rs), instead.
+
 <div align="center">
   <h1>Rexer</h1>
   <p>Redmine Extension (Plugin and Theme) manager</p>
